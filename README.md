@@ -1,4 +1,4 @@
-# Project 1 Classification Analysis on Textual Data
+# EE219-Larger-Scale-Data-Mining
 
 This repo is for "EE219 Larger Scale Data Mining" course projects at [UCLA](http://www.ucla.edu).
 
@@ -12,6 +12,10 @@ This repo is for "EE219 Larger Scale Data Mining" course projects at [UCLA](http
 | Yunchu Zhang |      private      |
 
 
+
+Brief Project Description:
+
+- Project 1: Classification Analysis on Textual Data
 
 
 
