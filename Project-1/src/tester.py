@@ -8,14 +8,14 @@ import feature
 # tester for task a: plot histogram
 #######################################################################
 def testerA():
-    train_set = data.DataLoader(category='target', mode='train')
+    train_set = data.DataLoader(category='class_8', mode='train')
     utils.plotHist(train_set)
 
 #######################################################################
 # tester for task b: TFxIDF
 #######################################################################
 def testerB():
-    train_set = data.DataLoader(category='target', mode='train')
+    train_set = data.DataLoader(category='class_8', mode='train')
 
     # min_df == 2
     train_TFxIDF, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
@@ -56,7 +56,7 @@ def testerC():
 # Tester for task d: Feature Selection (LSI) (NMF)
 #######################################################################
 def testerD():
-    train_set = data.DataLoader(category='target', mode='train')
+    train_set = data.DataLoader(category='class_8', mode='train')
 
     train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
