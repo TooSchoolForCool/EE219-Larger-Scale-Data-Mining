@@ -20,16 +20,16 @@ def stemming_tokenizer(text):
 
 # docs is list of documents (non-tokenized)
 def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, enable_log = True):
+    # stopwords and tokenizer config
     stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
     tokenizer = stemming_tokenizer if enable_stem else None
 
-    vectorizer = CountVectorizer(analyzer='word', min_df = min_df, tokenizer = tokenizer, stop_words = stop_words)
-    tfidf_transformer = TfidfTransformer()
-
     # get documents tokens
+    vectorizer = CountVectorizer(analyzer='word', min_df = min_df, tokenizer = tokenizer, stop_words = stop_words)
     docs_tkn =  vectorizer.fit_transform(docs)
 
     # calculate TFxIDF
+    tfidf_transformer = TfidfTransformer()
     docs_TFxIDF = tfidf_transformer.fit_transform(docs_tkn)
 
     # print log
