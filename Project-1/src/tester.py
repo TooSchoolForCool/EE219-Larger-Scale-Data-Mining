@@ -4,12 +4,16 @@ import data
 import utils
 import feature
 
+#######################################################################
 # tester for task a: plot histogram
+#######################################################################
 def testerA():
     train_set = data.DataLoader(category='target', mode='train')
     utils.plotHist(train_set)
 
+#######################################################################
 # tester for task b: TFxIDF
+#######################################################################
 def testerB():
     train_set = data.DataLoader(category='target', mode='train')
 
@@ -23,7 +27,10 @@ def testerB():
         enable_stem = True, enable_log = True)
     print("[min_df = 5] Number of terms: %d" % (train_TFxIDF.shape[1]))
 
+
+#######################################################################
 # tester for task c: TFxICF
+#######################################################################
 def testerC():
     train_set = data.DataLoader(category='all', mode='train')
 
@@ -32,7 +39,7 @@ def testerC():
 
     categories = train_set.getAllCategories()
 
-    # print every category top-10 words
+    # print top-10 words from each category 
     for i in range(0, len(categories)):
         top_10_words = []
 
@@ -45,9 +52,24 @@ def testerC():
 
         print("%s %r" % (categories[i], top_10_words))
 
+#######################################################################
+# Tester for task d: Feature Selection (LSI) (NMF)
+#######################################################################
+def testerD():
+    train_set = data.DataLoader(category='target', mode='train')
+
+    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+
+    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
+    print("Shape of feature vec after LSI: (%d, %d)" % lsi_train_tfxidf.shape)
+
+    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
+    print("Shape of feature vec after NMF: (%d, %d)" % nmf_train_tfxidf.shape)
+
 
 def main():
-    testerC()
+    testerD()
 
 if __name__ == '__main__':
     main()

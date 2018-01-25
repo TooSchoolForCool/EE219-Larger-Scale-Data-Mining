@@ -2,6 +2,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction import text
 from nltk.stem.snowball import SnowballStemmer
+from sklearn.decomposition import TruncatedSVD
+from sklearn.decomposition import NMF as sklearnNMF
 
 import data
 import string
@@ -79,15 +81,37 @@ def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, ena
 
     return docs_TFxIDF, vectorizer.get_feature_names()
 
-def foo():
-    train_set = data.DataLoader('target', 'train')
 
-    train_TFxIDF = calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
+#######################################################################
+# LSI - Latent Semantic Indexing
+#
+# A way to perform dimensionality reduction by using SVD
+#######################################################################
+def LSI(feature_vec, k = 50):
+    # here, constant random_state guarantee that everytime for the same
+    # input, LSI will produce same output
+    SVD = TruncatedSVD(n_components = k, random_state = 42)
+
+    feature_vec_lsi = SVD.fit_transform(feature_vec)
+    
+    return feature_vec_lsi
+
+
+#######################################################################
+# NMF - Non-Negative Matrix Factorizatiom
+#
+# A way to perform dimensionality reduction
+#######################################################################
+def NMF(feature_vec, k = 50):
+    nmf = sklearnNMF(n_components=50, init = 'random', random_state = 42)
+
+    nmf_vec = nmf.fit_transform(feature_vec)
+    
+    return nmf_vec
 
 
 def main():
-    foo()
+    pass
 
 if __name__ == '__main__':
     main()
