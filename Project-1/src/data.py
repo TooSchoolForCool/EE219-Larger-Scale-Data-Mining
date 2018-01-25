@@ -20,8 +20,7 @@ class DataLoader(object):
             self.dataset = fetch_20newsgroups(subset=mode, categories=RECREATION_ACT, shuffle=True, random_state=42)
         elif(category == 'tech'):
             self.dataset = fetch_20newsgroups(subset=mode, categories=COMPUTER_TECH, shuffle=True, random_state=42)
-        elif(category == 'test'):
-            print(TEST_SET)
+        elif(category == 'target'):
             self.dataset = fetch_20newsgroups(subset=mode, categories=TEST_SET, shuffle=True, random_state=42)            
         else:
             self.dataset = fetch_20newsgroups(subset=mode, shuffle=True, random_state=42)
@@ -29,7 +28,7 @@ class DataLoader(object):
         # calculate size of dataset
         self.length = len(self.dataset.data)
 
-    # return dataset item in a list
+    # return dataset item in a list (python list, NOT np.array)
     def getData(self):
         return self.dataset.data
 
@@ -53,8 +52,7 @@ class DataLoader(object):
 
 
 def main():
-    dataset = DataLoader(category='test', mode='train')
-    utils.plotHist2(dataset)
+    pass
 
 if __name__ == '__main__':
     main()
