@@ -40,7 +40,7 @@ def calcTFxICF(dataset, min_df = 1, enable_stopword = True, enable_stem = True, 
         class_docs[label] = class_docs[label] + ' ' + doc
 
     # calculate TFxICF, treat each class as a large document
-    TFxICF = calcTFxIDF(class_docs, min_df = min_df, enable_stopword = enable_stopword,
+    TFxICF, word_list = calcTFxIDF(class_docs, min_df = min_df, enable_stopword = enable_stopword,
         enable_stem = enable_stem, enable_log = enable_log)
 
     # print log
@@ -48,7 +48,7 @@ def calcTFxICF(dataset, min_df = 1, enable_stopword = True, enable_stem = True, 
         print("TFxICF shape: (%d, %d) [min_df = %d, enable_stopword = %r, enable_stem = %r]" % 
             (TFxICF.shape[0], TFxICF.shape[1], min_df, enable_stopword, enable_stem))
 
-    return TFxICF
+    return TFxICF, word_list
 
 
 #######################################################################
@@ -77,7 +77,7 @@ def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, ena
         print("TFxIDF shape: (%d, %d) [min_df = %d, enable_stopword = %r, enable_stem = %r]" % 
             (docs_TFxIDF.shape[0], docs_TFxIDF.shape[1], min_df, enable_stopword, enable_stem))
 
-    return docs_TFxIDF
+    return docs_TFxIDF, vectorizer.get_feature_names()
 
 def foo():
     train_set = data.DataLoader('target', 'train')
