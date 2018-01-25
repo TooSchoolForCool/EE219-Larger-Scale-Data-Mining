@@ -11,8 +11,15 @@ def testerA():
 def testerB():
     train_set = data.DataLoader(category='target', mode='train')
 
+    # min_df == 2
     train_TFxIDF = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
+    print("[min_df = 2] Number of terms: %d" % (train_TFxIDF.shape[1]))
+
+    # min_df == 5
+    train_TFxIDF = feature.calcTFxIDF(train_set.getData(), min_df = 5, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    print("[min_df = 5] Number of terms: %d" % (train_TFxIDF.shape[1]))
 
 def main():
     testerB()
