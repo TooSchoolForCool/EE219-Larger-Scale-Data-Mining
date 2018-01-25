@@ -18,7 +18,44 @@ def stemming_tokenizer(text):
     stemmed = [stemmer.stem(item) for item in words]
     return stemmed
 
+#######################################################################
+# calculate TFxICF
+#
+# dateset: the original dataset loaded from DataLoader
+#######################################################################
+def calcTFxICF(dataset, min_df = 1, enable_stopword = True, enable_stem = True, enable_log = True):
+    # for TFxICF, each class could be seem as a large document
+    # here, merge all same-class doc into one large doc
+    class_docs = ["" for i in range(0, 20)]
+
+    docs = dataset.getData()
+    labels = dataset.getLabelVec()
+    size = dataset.size()
+
+    for i in range(0, size):
+        doc = docs[i]
+        label = labels[i]
+
+        # merge doc with same class
+        class_docs[label] = class_docs[label] + ' ' + doc
+
+    # calculate TFxICF, treat each class as a large document
+    TFxICF = calcTFxIDF(class_docs, min_df = min_df, enable_stopword = enable_stopword,
+        enable_stem = enable_stem, enable_log = enable_log)
+
+    # print log
+    if(enable_log):
+        print("TFxICF shape: (%d, %d) [min_df = %d, enable_stopword = %r, enable_stem = %r]" % 
+            (TFxICF.shape[0], TFxICF.shape[1], min_df, enable_stopword, enable_stem))
+
+    return TFxICF
+
+
+#######################################################################
+# Calculate TFxIDF
+#
 # docs is list of documents (non-tokenized)
+#######################################################################
 def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, enable_log = True):
     # stopwords and tokenizer config
     stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
