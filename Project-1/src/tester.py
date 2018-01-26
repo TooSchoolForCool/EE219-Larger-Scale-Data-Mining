@@ -234,7 +234,7 @@ def testerF():
 #   multinomial naive Bayes classifier
 #######################################################################
 def testerG():
-    pass
+    print('a')
 
 
 # a list of function
@@ -262,7 +262,7 @@ def startTester(task):
 
 
 def main():
-    testerG
+    pass
 
 
 if __name__ == '__main__':
