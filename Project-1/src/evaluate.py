@@ -55,6 +55,8 @@ def crossValidation(dataset, k, learning_model, class_names, title):
 #######################################################################
 def analysis_report(test_y, predicted_y, targets):
     total_acc, total_precision, total_recall = 0.0, 0.0, 0.0
+    TP_list, FP_list, TN_list, FN_list = [], [], [], []
+    acc_list, prec_list, recall_list = [], [], []
 
     for target in range(0, len(targets)):
         TP, FP, TN, FN = 0.0, 0.0, 0.0, 0.0
@@ -77,18 +79,32 @@ def analysis_report(test_y, predicted_y, targets):
         total_recall = total_recall + recall
         total_precision = total_precision + precision
 
-        print("[%s] TP: %lf" % (targets[target], TP))
-        print("[%s] FP: %lf" % (targets[target], FP))
-        print("[%s] FN: %lf" % (targets[target], FN))
-        print("[%s] TN: %lf" % (targets[target], TN))
+        TP_list.append(TP)
+        FP_list.append(FP)
+        FN_list.append(FN)
+        TN_list.append(TN)
 
-        print("[%s] recall: %lf" % (targets[target], recall))
-        print("[%s] precision: %lf" % (targets[target], precision))
-        print("[%s] accurary: %lf" % (targets[target], accurary))
+        acc_list.append(accurary)
+        prec_list.append(precision)
+        recall_list.append(recall)
 
-    print('[average] recall: %lf' % (total_recall / len(targets)))
-    print('[average] precision: %lf' % (total_precision / len(targets)))
-    print('[average] accurary: %lf' % (total_acc / len(targets)))
+    # print metrics title
+    print("%s\t\t%s\t\t%s\t\t%s" % (' ' * 20, 'Precision', 'Recall', 'Accuracy'))
+    # print metricx for each category
+    for i in range(0, len(targets)):
+        print('%-20s\t\t%.6lf\t\t%.6lf\t\t%.6lf' % 
+            (targets[i], prec_list[i], recall_list[i], acc_list[i]))
+    # print average
+    print('%-20s\t\t%.6lf\t\t%.6lf\t\t%.6lf' % ('Average', (total_recall / len(targets)), 
+        (total_precision / len(targets)), (total_acc / len(targets))))
+    print('-' * 60)
+
+    # print confusion matrix title
+    print("%s\t%s\t%s\t%s\t%s" % (' ' * 20, 'TP', 'FP', 'TN', 'FN'))
+    for i in range(0, len(targets)):
+        print('%-20s\t%d\t%d\t%d\t%d' % 
+            (targets[i], TP_list[i], FP_list[i], TN_list[i], FN_list[i]))
+    print('-' * 60)
 
 
 def main():
