@@ -20,6 +20,7 @@ class SVM(object):
         # model_type = 'ovr' if model_type == 'binary' else 'ovo'
 
         self.svm_model_ = svm.LinearSVC(C=penalty)
+        # self.svm_model_ = svm.SVC(kernel='rbf', C=penalty)
 
     #######################################################################
     # Model Training function
@@ -45,7 +46,7 @@ class SVM(object):
     # Input:
     #   x:  
     #       feature vector data set
-    #       type: Pandas DataFrame (n * p dimension)
+    #       [[x, ..., x], [x, ..., x], ..., [x, ..., x]]
     #
     # Output:
     #   predicted_y:
@@ -62,16 +63,16 @@ class SVM(object):
 
 
     #######################################################################
-    # Get decisionFunction
+    # Get predicted y score
     # Input:
     #   x:  
     #       feature vector data set
-    #       type: Pandas DataFrame (n * p dimension)
+    #       [[x, ..., x], [x, ..., x], ..., [x, ..., x]]
     #
     # Output:
     #   Distance of the samples X to the separating hyperplane.
     #######################################################################
-    def decisionFunction(self, x):
+    def predictScore(self, x):
         return self.svm_model_.decision_function(x)
 
 def main():

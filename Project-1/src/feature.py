@@ -4,6 +4,7 @@ from sklearn.feature_extraction import text
 from nltk.stem.snowball import SnowballStemmer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF as sklearnNMF
+from sklearn.preprocessing import MinMaxScaler
 
 import data
 import string
@@ -103,12 +104,16 @@ def LSI(feature_vec, k = 50):
 # A way to perform dimensionality reduction
 #######################################################################
 def NMF(feature_vec, k = 50):
-    nmf = sklearnNMF(n_components=50, init = 'random', random_state = 42)
+    nmf = sklearnNMF(n_components=k, random_state = 42)
 
     nmf_vec = nmf.fit_transform(feature_vec)
-    
+
     return nmf_vec
 
+def minMaxScaler(vec):
+    min_max = MinMaxScaler()
+    
+    return min_max.fit_transform(vec)
 
 def main():
     pass

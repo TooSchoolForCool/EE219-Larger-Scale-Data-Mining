@@ -29,9 +29,12 @@ def evalute(train, test, learning_model, class_names, title = 'Learning Model'):
     analysis_report(test_y, predicted_y, class_names)
 
     # Print ROC curve
-    decision_func = learning_model.decisionFunction(test_x)
+    decision_func = learning_model.predictScore(test_x)
     utils.printROC(test_y, decision_func, title)
 
+
+def crossValidation(dataset, k, learning_model, class_names, title):
+    pass
 
 #######################################################################
 # Classification Analysis Report

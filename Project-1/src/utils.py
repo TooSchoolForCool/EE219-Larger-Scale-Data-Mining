@@ -46,8 +46,8 @@ def printTitle(msg, length = 60):
 #######################################################################
 # Print ROC curve
 #######################################################################
-def printROC(test_y, decision_func, title='Learning Model'):
-    fpr, tpr, threshold = roc_curve(test_y, decision_func)
+def printROC(test_y, predict_y_score, title='Learning Model'):
+    fpr, tpr, threshold = roc_curve(test_y, predict_y_score)
 
     line = [0, 1]
     plt.plot(fpr, tpr)
