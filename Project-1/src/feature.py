@@ -104,19 +104,26 @@ def LSI(feature_vec, k = 50):
 # A way to perform dimensionality reduction
 #######################################################################
 def NMF(feature_vec, k = 50):
-    nmf = sklearnNMF(n_components=k, random_state = 42)
+    nmf = sklearnNMF(n_components=k, init = 'random', random_state = 42)
 
     nmf_vec = nmf.fit_transform(feature_vec)
 
     return nmf_vec
 
+#######################################################################
+# Min Max Scaler
+#
+# vec will be mapped into range (0, 1)
+#######################################################################
 def minMaxScaler(vec):
     min_max = MinMaxScaler()
     
     return min_max.fit_transform(vec)
 
+
 def main():
     pass
+
 
 if __name__ == '__main__':
     main()
