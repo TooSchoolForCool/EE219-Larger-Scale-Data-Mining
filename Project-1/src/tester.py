@@ -127,20 +127,122 @@ def testerE():
     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
         soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
 
+#######################################################################
+# Tester for task e: SVM
+#######################################################################
+def testerE():
+    # get dataset
+    class_names = ['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='class_8', mode='train')
+    test_set = data.DataLoader(category='class_8', mode='test')
+
+    # calculate training set feature vector
+    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
+    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
+
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    train_labels = train_set.getLabelVec()
+    for i in range(0, train_set.size()):
+        train_labels[i] = 0 if train_labels[i] < 4 else 1
+
+    # calculate testing set feature vector
+    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
+    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
+
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    test_labels = test_set.getLabelVec()
+    for i in range(0, test_set.size()):
+        test_labels[i] = 0 if test_labels[i] < 4 else 1
+
+    # declare SVM model
+    hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
+    soft_svm = svm.SVM(model_type = 'binary', penalty = 0.001)
+
+    # LSI hard vs. soft
+    utils.printTitle('Hard-margin SVM with TFxIDF & LSI')
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & LSI')
+
+    utils.printTitle('Soft-margin SVM with TFxIDF & LSI')
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & LSI')
+
+    # NMF hard vs. soft
+    utils.printTitle('Hard-margin SVM with TFxIDF & NMF')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & NMF')
+
+    utils.printTitle('Soft-margin SVM with TFxIDF & NMF')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
+
+
+#######################################################################
+# Tester for Task F: 5-fold cross_validation find best penalty
+#######################################################################
+def testerF():
+    # get dataset
+    class_names = ['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='class_8', mode='train')
+    test_set = data.DataLoader(category='class_8', mode='test')
+
+    # calculate training set feature vector
+    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
+
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    train_labels = train_set.getLabelVec()
+    for i in range(0, train_set.size()):
+        train_labels[i] = 0 if train_labels[i] < 4 else 1
+
+    # calculate testing set feature vector
+    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
+
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    test_labels = test_set.getLabelVec()
+    for i in range(0, test_set.size()):
+        test_labels[i] = 0 if test_labels[i] < 4 else 1
+
+    penalties = [0.001, 0.01, 0.1, 1.0, 10, 100, 1000]
+    for penalty in penalties:
+        svm_model = svm.SVM(model_type='binary', penalty=penalty)
+
+        title = 'SVM (gamma = %r) with \'TFxIDF & LSI\' Feature' % (penalty)
+        utils.printTitle(title)
+        evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+            svm_model, class_names, title)
+
+
 # a list of function
 tester_function = [
     testerA,
     testerB,
     testerC,
     testerD,
-    testerE
+    testerE,
+    testerF
 ]
 
 def startTester(task):
     tester_function[task]()
 
 def main():
-    testerE()
+    testerF()
 
 
 if __name__ == '__main__':
