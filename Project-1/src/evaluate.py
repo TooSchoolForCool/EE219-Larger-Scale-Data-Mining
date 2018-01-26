@@ -74,6 +74,11 @@ def analysis_report(test_y, predicted_y, targets):
         total_recall = total_recall + recall
         total_precision = total_precision + precision
 
+        print("[%s] TP: %lf" % (targets[target], TP))
+        print("[%s] FP: %lf" % (targets[target], FP))
+        print("[%s] FN: %lf" % (targets[target], FN))
+        print("[%s] TN: %lf" % (targets[target], TN))
+
         print("[%s] recall: %lf" % (targets[target], recall))
         print("[%s] precision: %lf" % (targets[target], precision))
         print("[%s] accurary: %lf" % (targets[target], accurary))
