@@ -263,19 +263,78 @@ def testerH():
     test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # create Naive Bayes Learning Model
-    nb_model = regression.LogisticRegression(penalty=1)
+    lg_model = regression.LogisticRegression(penalty=1000)
 
     # LSI
     title = 'Logistic Regression with TFxIDF & LSI'
     utils.printTitle(title)
     evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        nb_model, class_names, title)
+        lg_model, class_names, title)
 
     # NMF
     title = 'Logistic Regression with TFxIDF & NMF'
     utils.printTitle(title)
     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        nb_model, class_names, title)
+        lg_model, class_names, title)
+
+
+#######################################################################
+# Tester for task H:
+#   Logistic Regression with regularization
+#######################################################################
+def testerI():
+    # get dataset
+    class_names = ['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='class_8', mode='train')
+    test_set = data.DataLoader(category='class_8', mode='test')
+
+    # calculate training set feature vector
+    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
+    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
+
+    # calculate testing set feature vector
+    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
+        enable_stem = True, enable_log = True)
+    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
+    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
+
+    
+    train_labels = train_set.getLabelVec()
+    test_labels = test_set.getLabelVec()
+
+    # renaming labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
+
+    # create Naive Bayes Learning Model
+    l1_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l1')
+    l2_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l2')
+
+    # LSI
+    title = 'L1-Logistic Regression with TFxIDF & LSI'
+    utils.printTitle(title)
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        l1_lg_model, class_names, title)
+
+    title = 'L2-Logistic Regression with TFxIDF & LSI'
+    utils.printTitle(title)
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        l2_lg_model, class_names, title)
+
+    # NMF
+    title = 'L1-Logistic Regression with TFxIDF & NMF'
+    utils.printTitle(title)
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        l1_lg_model, class_names, title)
+
+    title = 'L2-Logistic Regression with TFxIDF & NMF'
+    utils.printTitle(title)
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        l2_lg_model, class_names, title)
 
 
 # a list of function
@@ -287,14 +346,16 @@ tester_function = [
     testerE,
     testerF,
     testerG,
-    testerH
+    testerH,
+    testerI
 ]
+
 
 # tester function booter
 def startTester(task):
     task = task.lower()
 
-    if task not in 'abcdefgh':
+    if task not in 'abcdefghi':
         print('Do not have task %r' % task)
         exit(1)
 

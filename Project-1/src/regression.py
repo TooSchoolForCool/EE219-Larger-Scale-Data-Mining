@@ -7,8 +7,8 @@ class LogisticRegression(object):
     # model_type:
     #   binary -> 2-class classification
     #######################################################################
-    def __init__(self, penalty = 1.0):
-        self.logreg_ = LG(C=penalty)
+    def __init__(self, penalty = 1.0, regularization = 'l1'):
+        self.logreg_ = LG(C=penalty, penalty=regularization)
 
     #######################################################################
     # Model Training function
@@ -53,9 +53,10 @@ class LogisticRegression(object):
     #   Distance of the samples X to the separating hyperplane.
     #######################################################################
     def predictScore(self, x):
-        predicted_prob = self.logreg_.predict_proba(x)
+        # predicted_prob = self.logreg_.predict_proba(x)
 
-        return predicted_prob[:, 1]
+        # return predicted_prob[:, 1]
+        return self.logreg_.decision_function(x)
 
 
 def main():
