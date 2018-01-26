@@ -127,9 +127,21 @@ def testerE():
     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
         soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
 
+# a list of function
+tester_function = [
+    testerA,
+    testerB,
+    testerC,
+    testerD,
+    testerE
+]
+
+def startTester(task):
+    tester_function[task]()
 
 def main():
     testerE()
+
 
 if __name__ == '__main__':
     main()
