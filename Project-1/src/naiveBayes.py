@@ -59,8 +59,8 @@ class NaiveBayes(object):
     #######################################################################
     def predictScore(self, x):
         predicted_prob = self.nb_.predict_proba(x)
-        
-        return predicted_prob[:, 0]
+
+        return predicted_prob[:, 1]
 
 def main():
     pass
