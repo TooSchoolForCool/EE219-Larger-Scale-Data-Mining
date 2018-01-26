@@ -16,11 +16,10 @@ class SVM(object):
     #   penalty:
     #       The greater the penalty, the more weight on slack variable
     #######################################################################
-    def __init__(self, model_type = 'binary', kernel = 'linear', penalty = 1.0):
-        model_type = 'ovr' if model_type == 'binary' else 'ovo'
+    def __init__(self, model_type = 'binary', penalty = 1.0):
+        # model_type = 'ovr' if model_type == 'binary' else 'ovo'
 
-        self.svm_model_ = svm.SVC(decision_function_shape = model_type, 
-            C = penalty, kernel = kernel)
+        self.svm_model_ = svm.LinearSVC(C=penalty)
 
     #######################################################################
     # Model Training function
@@ -61,6 +60,19 @@ class SVM(object):
 
         return predicted_y
 
+
+    #######################################################################
+    # Get decisionFunction
+    # Input:
+    #   x:  
+    #       feature vector data set
+    #       type: Pandas DataFrame (n * p dimension)
+    #
+    # Output:
+    #   Distance of the samples X to the separating hyperplane.
+    #######################################################################
+    def decisionFunction(self, x):
+        return self.svm_model_.decision_function(x)
 
 def main():
     pass

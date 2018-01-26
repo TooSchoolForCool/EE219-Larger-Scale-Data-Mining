@@ -1,3 +1,4 @@
+from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -32,6 +33,33 @@ def plotHist(dataset):
     # size figure in local directory
     # fig.savefig('foo.png', bbox_inches='tight')
     plt.show()
+
+#######################################################################
+# Print Title for each task
+#######################################################################
+def printTitle(msg, length = 60):
+    print('*' * length)
+    print('* %s' % msg)
+    print('*' * length)
+
+
+#######################################################################
+# Print ROC curve
+#######################################################################
+def printROC(test_y, decision_func, title='Learning Model'):
+    fpr, tpr, threshold = roc_curve(test_y, decision_func)
+
+    line = [0, 1]
+    plt.plot(fpr, tpr)
+    plt.plot([0,1],[0,1])
+    plt.axis([-0.004, 1, 0, 1.006])
+
+    plt.ylabel('True Positive Rate')
+    plt.xlabel('False Positive Rate')
+    plt.title('ROC-Curve of ' + title)
+
+    plt.show()
+
 
 def main():
     pass
