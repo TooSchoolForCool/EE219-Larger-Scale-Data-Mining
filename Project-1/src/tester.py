@@ -91,8 +91,7 @@ def testerE():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     train_labels = train_set.getLabelVec()
-    for i in range(0, train_set.size()):
-        train_labels[i] = 0 if train_labels[i] < 4 else 1
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
 
     # calculate testing set feature vector
     test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
@@ -104,8 +103,7 @@ def testerE():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     test_labels = test_set.getLabelVec()
-    for i in range(0, test_set.size()):
-        test_labels[i] = 0 if test_labels[i] < 4 else 1
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # declare SVM model
     hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
@@ -150,8 +148,7 @@ def testerF():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     train_labels = train_set.getLabelVec()
-    for i in range(0, train_set.size()):
-        train_labels[i] = 0 if train_labels[i] < 4 else 1
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
 
     # calculate testing set feature vector
     test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
@@ -163,8 +160,7 @@ def testerF():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     test_labels = test_set.getLabelVec()
-    for i in range(0, test_set.size()):
-        test_labels[i] = 0 if test_labels[i] < 4 else 1
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     penalties = [0.001, 0.01, 0.1, 1.0, 10, 100, 1000]
     for penalty in penalties:
@@ -202,8 +198,7 @@ def testerG():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     train_labels = train_set.getLabelVec()
-    for i in range(0, train_set.size()):
-        train_labels[i] = 0 if train_labels[i] < 4 else 1
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
 
     # calculate testing set feature vector
     test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
@@ -216,8 +211,7 @@ def testerG():
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
     test_labels = test_set.getLabelVec()
-    for i in range(0, test_set.size()):
-        test_labels[i] = 0 if test_labels[i] < 4 else 1
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # create Naive Bayes Learning Model
     nb_model = naiveBayes.NaiveBayes()
