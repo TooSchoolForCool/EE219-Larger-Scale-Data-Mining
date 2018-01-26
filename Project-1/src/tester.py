@@ -367,8 +367,8 @@ def testerJ():
     # renaming labels
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
-    # train_labels = [0 if l < 4 else 1 for l in train_labels]
-    # test_labels = [0 if l < 4 else 1 for l in test_labels]
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # create Naive Bayes Learning Model
     l1_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l1')
