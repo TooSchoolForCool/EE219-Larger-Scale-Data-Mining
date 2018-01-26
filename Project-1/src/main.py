@@ -7,7 +7,7 @@ def main():
 
     args = vars(parser.parse_args())
 
-    tester.startTester(ord(args['task'].lower()) - ord('a'))
+    tester.startTester(args['task'])
 
 if __name__ == '__main__':
     main()

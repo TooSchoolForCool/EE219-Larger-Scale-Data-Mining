@@ -186,7 +186,8 @@ def testerE():
 
 
 #######################################################################
-# Tester for Task F: 5-fold cross_validation find best penalty
+# Tester for Task F: 
+#   5-fold cross_validation find best penalty
 #######################################################################
 def testerF():
     # get dataset
@@ -228,6 +229,14 @@ def testerF():
             svm_model, class_names, title)
 
 
+#######################################################################
+# Tester for task G:
+#   multinomial naive Bayes classifier
+#######################################################################
+def testerG():
+    pass
+
+
 # a list of function
 tester_function = [
     testerA,
@@ -235,14 +244,25 @@ tester_function = [
     testerC,
     testerD,
     testerE,
-    testerF
+    testerF,
+    testerG
 ]
 
+# tester function booter
 def startTester(task):
-    tester_function[task]()
+    task = task.lower()
+
+    if task not in 'abcdefg':
+        print('Do not have task %r' % task)
+        exit(1)
+
+    # function index for corresponding function
+    idx = ord(task) - ord('a')
+    tester_function[idx]()
+
 
 def main():
-    testerF()
+    testerG
 
 
 if __name__ == '__main__':
