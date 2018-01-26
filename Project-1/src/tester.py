@@ -279,7 +279,7 @@ def testerH():
 
 
 #######################################################################
-# Tester for task H:
+# Tester for task I:
 #   Logistic Regression with regularization
 #######################################################################
 def testerI():
