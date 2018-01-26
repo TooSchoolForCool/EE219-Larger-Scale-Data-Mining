@@ -192,7 +192,7 @@ def testerG():
     test_set = data.DataLoader(category='class_8', mode='test')
 
     # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 3, enable_stopword = True, 
+    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
     lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
     lsi_train_tfxidf = feature.minMaxScaler(lsi_train_tfxidf)
@@ -206,7 +206,7 @@ def testerG():
         train_labels[i] = 0 if train_labels[i] < 4 else 1
 
     # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 3, enable_stopword = True, 
+    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
     lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
     lsi_test_tfxidf = feature.minMaxScaler(lsi_test_tfxidf)

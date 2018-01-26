@@ -58,7 +58,9 @@ class NaiveBayes(object):
     #   Distance of the samples X to the separating hyperplane.
     #######################################################################
     def predictScore(self, x):
-        return self.predict(x) 
+        predicted_prob = self.nb_.predict_proba(x)
+        
+        return predicted_prob[:, 0]
 
 def main():
     pass
