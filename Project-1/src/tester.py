@@ -1,5 +1,6 @@
 import numpy as np
-from sklearn import cross_validation
+from sklearn.model_selection import cross_val_score
+from sklearn import svm as sklearn_svm
 
 import data
 import utils
@@ -105,14 +106,12 @@ def testerF():
     # feature extraction with LSI
     lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
         train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
-        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
-        enable_minmax_scale=enable_minmax_scale)
+        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True)
 
     # feature extraction with NMF
     nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
         train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
-        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
-        enable_minmax_scale=enable_minmax_scale)
+        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True)
     
     # renaming training set labels
     #   0 -> computer technology [0, 4]
@@ -120,48 +119,31 @@ def testerF():
     train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
     test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
 
-    penalties = [0.001, 0.01, 0.1, 1.0, 10, 100, 1000]
-    for penalty in penalties:
-        svm_model = svm.SVM(model_type='binary', penalty=penalty)
-        cv = cross_validation.KFold(len(x), n_folds = 5, shuffle=False, random_state=None)
-        for train_idx, test_idx in cv:
-        title = 'SVM (gamma = %r) with \'TFxIDF & LSI\' Feature' % (penalty)
-        utils.printTitle(title)
+    best_score = 0
+    best_gamma = 0
+    for gamma in [0.001, 0.01, 0.1, 1.0, 10, 100, 1000]:
+        clf = sklearn_svm.LinearSVC(C=gamma, random_state=42)
+        clf.fit(lsi_train_tfxidf, train_labels)
+        scores = (cross_val_score(clf, lsi_train_tfxidf, train_labels, cv=5))
+        if scores.mean() > best_score:
+            best_score = scores.mean()
+            best_gamma = gamma
+        print("[gamma = %r] 5-Fold Average Accuracy: %0.8f" % (gamma, scores.mean()))
+    print("Best Accuracy is %0.8f when gamma = " % best_score + str(best_gamma))
 
-        title = 'SVM (gamma = %r) with \'TFxIDF & NMF\' Feature' % (penalty)
-        utils.printTitle(title)
-        evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-            svm_model, class_names, title)
+    # declare a best-gamma SVM
+    svm_model = svm.SVM(model_type = 'binary', penalty = best_gamma)
 
-    
+    # Testing for LSI feature
+    title = 'Best [gamma = ' + str(best_gamma) + '] SVM with TFxIDF'
+    utils.printTitle(title + ' [LSI]')
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        svm_model, class_names, title + ' [LSI]')
 
-    for train_idx, test_idx in cv:
-        train_x = x.values[train_idx]
-        train_y = y.values.ravel()[train_idx]
-
-        test_x = x.values[test_idx]
-        test_y = y.values.ravel()[test_idx]
-
-        train_x = {'x'+str(i):[train_x[j][i] for j in range(len(train_x))] for i in range(len(train_x[0]))}
-        train_x = pd.DataFrame(train_x)
-
-        train_y = {'y':train_y}
-        train_y = pd.DataFrame(train_y)
-
-        test_x = {'x'+str(i):[test_x[j][i] for j in range(len(test_x))] for i in range(len(test_x[0]))}
-        test_x = pd.DataFrame(test_x)
-
-        test_y = {'y':test_y}
-        test_y = pd.DataFrame(test_y)
-
-        ret_train_x.append(train_x)
-        ret_train_y.append(train_y)
-        ret_test_x.append(test_x)
-        ret_test_y.append(test_y)
-
-    return zip(ret_train_x, ret_train_y, ret_test_x, ret_test_y)
-
-    
+    # Testing for NMF feature
+    utils.printTitle(title + ' [NMF]')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        svm_model, class_names, title + ' [NMF]')
 
 
 #######################################################################
