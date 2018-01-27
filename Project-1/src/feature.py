@@ -1,12 +1,15 @@
+from nltk import word_tokenize
+from nltk.stem.snowball import SnowballStemmer
+
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction import text
-from nltk.stem.snowball import SnowballStemmer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.decomposition import NMF as sklearnNMF
 from sklearn.preprocessing import MinMaxScaler
 
 import data
+import tokenizer as tkn
 import string
 import re
 
@@ -60,16 +63,11 @@ def calcTFxICF(dataset, min_df = 1, enable_stopword = True, enable_stem = True, 
 # docs is list of documents (non-tokenized)
 #######################################################################
 def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, enable_log = True):
-    # stopwords and tokenizer config
-    stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
-    tokenizer = stemming_tokenizer if enable_stem else None
-
-    # get documents tokens
-    vectorizer = CountVectorizer(analyzer='word', min_df = min_df, tokenizer = tokenizer, stop_words = stop_words)
-    docs_tkn =  vectorizer.fit_transform(docs)
-
-    # calculate TFxIDF
+    vectorizer = tkn.MyTokenizer(min_df=min_df)
     tfidf_transformer = TfidfTransformer()
+    
+    # calculate TFxIDF
+    docs_tkn =  vectorizer.fit_transform(docs)
     docs_TFxIDF = tfidf_transformer.fit_transform(docs_tkn)
 
     # print log
@@ -96,9 +94,9 @@ def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
 
     # stopwords and tokenizer config
     stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
+    # get documents tokens
     tokenizer = stemming_tokenizer if enable_stem else None
-
-    # define word tokenizer (vectorizer)
+    
     vectorizer = CountVectorizer(analyzer='word', min_df=min_df, tokenizer=tokenizer, stop_words=stop_words)
     
     # define feature extractor

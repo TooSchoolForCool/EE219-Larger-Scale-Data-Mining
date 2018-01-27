@@ -1,6 +1,5 @@
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import NMF as sklearnNMF
+from sklearn import cross_validation
 
 import data
 import utils
@@ -27,7 +26,6 @@ def testerB():
     train_TFxIDF, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
     print("[min_df = 2] Number of terms: %d" % (train_TFxIDF.shape[1]))
-    print(train_TFxIDF)
 
     # min_df == 5
     train_TFxIDF, _ = feature.calcTFxIDF(train_set.getData(), min_df = 5, enable_stopword = True, 
@@ -42,7 +40,7 @@ def testerB():
 def testerC():
     train_set = data.DataLoader(category='all', mode='train')
 
-    train_TFxICF, word_list = feature.calcTFxICF(train_set, min_df = 5, enable_stopword = True, 
+    train_TFxICF, word_list = feature.calcTFxICF(train_set, min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = False)
 
     categories = train_set.getAllCategories()
@@ -104,43 +102,66 @@ def testerF():
     train_set = data.DataLoader(category='class_8', mode='train')
     test_set = data.DataLoader(category='class_8', mode='test')
 
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
+    # feature extraction with LSI
+    lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+        enable_minmax_scale=enable_minmax_scale)
 
+    # feature extraction with NMF
+    nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
+        enable_minmax_scale=enable_minmax_scale)
+    
     # renaming training set labels
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
-    train_labels = train_set.getLabelVec()
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    test_labels = test_set.getLabelVec()
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
+    train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
+    test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
 
     penalties = [0.001, 0.01, 0.1, 1.0, 10, 100, 1000]
     for penalty in penalties:
         svm_model = svm.SVM(model_type='binary', penalty=penalty)
-
+        cv = cross_validation.KFold(len(x), n_folds = 5, shuffle=False, random_state=None)
+        for train_idx, test_idx in cv:
         title = 'SVM (gamma = %r) with \'TFxIDF & LSI\' Feature' % (penalty)
         utils.printTitle(title)
-        evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-            svm_model, class_names, title)
 
         title = 'SVM (gamma = %r) with \'TFxIDF & NMF\' Feature' % (penalty)
         utils.printTitle(title)
         evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
             svm_model, class_names, title)
+
+    
+
+    for train_idx, test_idx in cv:
+        train_x = x.values[train_idx]
+        train_y = y.values.ravel()[train_idx]
+
+        test_x = x.values[test_idx]
+        test_y = y.values.ravel()[test_idx]
+
+        train_x = {'x'+str(i):[train_x[j][i] for j in range(len(train_x))] for i in range(len(train_x[0]))}
+        train_x = pd.DataFrame(train_x)
+
+        train_y = {'y':train_y}
+        train_y = pd.DataFrame(train_y)
+
+        test_x = {'x'+str(i):[test_x[j][i] for j in range(len(test_x))] for i in range(len(test_x[0]))}
+        test_x = pd.DataFrame(test_x)
+
+        test_y = {'y':test_y}
+        test_y = pd.DataFrame(test_y)
+
+        ret_train_x.append(train_x)
+        ret_train_y.append(train_y)
+        ret_test_x.append(test_x)
+        ret_test_y.append(test_y)
+
+    return zip(ret_train_x, ret_train_y, ret_test_x, ret_test_y)
+
+    
 
 
 #######################################################################
@@ -267,7 +288,6 @@ def startTester(task):
 
 def main():
     pass
-
 
 if __name__ == '__main__':
     main()
