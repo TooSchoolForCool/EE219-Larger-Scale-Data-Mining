@@ -91,7 +91,7 @@ def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
     if feature not in ['tfidf']:
         print('[featurePipeline ERROR]: no such option %s' % (feature))
 
-    if reduction not in ['lsi', 'nmf']:
+    if reduction not in ['lsi', 'nmf', None]:
         print('[featurePipeline ERROR]: no such option %s' % (reducer))
 
     # stopwords and tokenizer config
@@ -110,6 +110,8 @@ def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
         reducer = TruncatedSVD(n_components = k, random_state = 42)
     elif reduction == 'nmf':
         reducer = sklearnNMF(n_components=k, init='random', random_state=42)
+    elif reduction == None:
+        reducer = None
 
     return startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_minmax_scale, enable_log)
 
@@ -124,11 +126,15 @@ def startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_minmax
     test_feature = extractor.transform(test_tkn)
 
     # Dimensionality reduction
-    train_feature_reduced = reducer.fit_transform(train_feature)
-    test_feature_reduced = reducer.transform(test_feature)
+    if reducer != None:
+        train_feature_reduced = reducer.fit_transform(train_feature)
+        test_feature_reduced = reducer.transform(test_feature)
+    else:
+        train_feature_reduced = train_feature
+        test_feature_reduced = test_feature
 
     # min-max scaler, map vec into range (0, 1)
-    if enable_minmax_scale:
+    if (reducer != None) and enable_minmax_scale:
         train_feature_reduced = minMaxScaler(train_feature_reduced)
         test_feature_reduced = minMaxScaler(test_feature_reduced)
 

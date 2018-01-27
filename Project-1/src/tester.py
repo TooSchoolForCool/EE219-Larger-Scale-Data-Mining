@@ -153,7 +153,7 @@ def testerG():
 
     # start testing pipeline
     testingPipeline(nb_model, 2, 'Multinomial NaiveBayes with TFxIDF', 
-        enable_minmax_scale=True)
+        enable_minmax_scale=True, no_reduce=True)
 
 
 #######################################################################
@@ -205,7 +205,7 @@ tester_function = [
     testerJ
 ]
 
-def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False):
+def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False, no_reduce=False):
     # get dataset
     class_names = ['Computer technology', 'Recreational activity']
     train_set = data.DataLoader(category='class_8', mode='train')
@@ -238,6 +238,18 @@ def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False):
     utils.printTitle(title + ' [NMF]')
     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
         learning_model, class_names, title + ' [NMF]')
+
+    # Testing for Non-demensionality Reduction
+    if no_reduce:
+        # get original tfidf feature
+        train_tfxidf, test_tfxidf = feature.pipeline(
+            train_set.getData(), test_set.getData(), feature='tfidf', reduction=None,
+            k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+            enable_minmax_scale=enable_minmax_scale)
+
+        utils.printTitle(title)
+        evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
+            learning_model, class_names, title)
 
 
 # tester function booter
