@@ -41,7 +41,7 @@ def testerB():
 def testerC():
     train_set = data.DataLoader(category='all', mode='train')
 
-    train_TFxICF, word_list = feature.calcTFxICF(train_set, min_df = 1, enable_stopword = True, 
+    train_TFxICF, word_list = feature.calcTFxICF(train_set, min_df = 5, enable_stopword = True, 
         enable_stem = True, enable_log = False)
 
     categories = train_set.getAllCategories()
@@ -79,57 +79,13 @@ def testerD():
 # Tester for task e: SVM
 #######################################################################
 def testerE():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    print(type(lsi_train_tfxidf))
-    print(lsi_train_tfxidf)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
-    print(type(nmf_train_tfxidf))
-    print(nmf_train_tfxidf)
-    
-    train_labels = train_set.getLabelVec()
-    test_labels = test_set.getLabelVec()
-
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    # lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
     # declare SVM model
     hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
     soft_svm = svm.SVM(model_type = 'binary', penalty = 0.001)
 
-    # LSI hard vs. soft
-    # utils.printTitle('Hard-margin SVM with TFxIDF & LSI')
-    # evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-    #     hard_svm, class_names, 'Hard-margin SVM with TFxIDF & LSI')
-
-    # utils.printTitle('Soft-margin SVM with TFxIDF & LSI')
-    # evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-    #     soft_svm, class_names, 'Soft-margin SVM with TFxIDF & LSI')
-
-    # NMF hard vs. soft
-    utils.printTitle('Hard-margin SVM with TFxIDF & NMF')
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & NMF')
-
-    utils.printTitle('Soft-margin SVM with TFxIDF & NMF')
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
+    # start testing pipeline
+    testingPipeline(hard_svm, 2, 'Hard-margin SVM with TFxIDF')
+    testingPipeline(soft_svm, 2, 'Soft-margin SVM with TFxIDF')
 
 
 #######################################################################
@@ -238,47 +194,11 @@ def testerG():
 #   Logistic Regression
 #######################################################################
 def testerH():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    
-    train_labels = train_set.getLabelVec()
-    test_labels = test_set.getLabelVec()
-
-    # renaming labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
     # create Naive Bayes Learning Model
-    lg_model = regression.LogisticRegression(penalty=1000)
+    lg_model = regression.LogisticRegression(penalty=1)
 
-    # LSI
-    title = 'Logistic Regression with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        lg_model, class_names, title)
-
-    # NMF
-    title = 'Logistic Regression with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        lg_model, class_names, title)
+    # start testing pipeline
+    testingPipeline(lg_model, 2, 'Logistic Regression with TFxIDF')
 
 
 #######################################################################
@@ -286,58 +206,13 @@ def testerH():
 #   Logistic Regression with regularization
 #######################################################################
 def testerI():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    
-    train_labels = train_set.getLabelVec()
-    test_labels = test_set.getLabelVec()
-
-    # renaming labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
     # create Naive Bayes Learning Model
-    l1_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l1')
-    l2_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l2')
+    l1_lg_model = regression.LogisticRegression(penalty=1, regularization='l1')
+    l2_lg_model = regression.LogisticRegression(penalty=1, regularization='l2')
 
-    # LSI
-    title = 'L1-Logistic Regression with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        l1_lg_model, class_names, title)
-
-    title = 'L2-Logistic Regression with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        l2_lg_model, class_names, title)
-
-    # NMF
-    title = 'L1-Logistic Regression with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        l1_lg_model, class_names, title)
-
-    title = 'L2-Logistic Regression with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        l2_lg_model, class_names, title)
+    # start testing pipeline
+    testingPipeline(l1_lg_model, 2, 'L1-Logistic Regression with TFxIDF')
+    testingPipeline(l2_lg_model, 2, 'L2-Logistic Regression with TFxIDF')
 
 
 #######################################################################
@@ -346,58 +221,7 @@ def testerI():
 #   Naive Bayes & SVM
 #######################################################################
 def testerJ():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    
-    train_labels = train_set.getLabelVec()
-    test_labels = test_set.getLabelVec()
-
-    # renaming labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
-    # create Naive Bayes Learning Model
-    l1_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l1')
-    l2_lg_model = regression.LogisticRegression(penalty=0.1, regularization='l2')
-
-    # LSI
-    title = 'L1-Logistic Regression with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        l1_lg_model, class_names, title)
-
-    title = 'L2-Logistic Regression with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        l2_lg_model, class_names, title)
-
-    # NMF
-    title = 'L1-Logistic Regression with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        l1_lg_model, class_names, title)
-
-    title = 'L2-Logistic Regression with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        l2_lg_model, class_names, title)
+    pass
 
 
 # a list of function
@@ -414,6 +238,38 @@ tester_function = [
     testerJ
 ]
 
+def testingPipeline(learning_model, min_df, title):
+    # get dataset
+    class_names = ['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='class_8', mode='train')
+    test_set = data.DataLoader(category='class_8', mode='test')
+
+    # feature extraction with LSI
+    lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi', 
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True)
+
+    # feature extraction with NMF
+    nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True)
+    
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
+    test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
+
+    # Testing for LSI feature
+    utils.printTitle(title + ' [LSI]')
+    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+        learning_model, class_names, title + ' [LSI]')
+
+    # Testing for NMF feature
+    utils.printTitle(title + ' [NMF]')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        learning_model, class_names, title + ' [NMF]')
+
 
 # tester function booter
 def startTester(task):
@@ -428,41 +284,8 @@ def startTester(task):
     tester_function[idx]()
 
 
-def foo():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # feature extraction
-    nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
-        train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
-        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True)
-    
-    train_labels = train_set.getLabelVec()
-    test_labels = test_set.getLabelVec()
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
-    # declare SVM model
-    hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
-    soft_svm = svm.SVM(model_type = 'binary', penalty = 0.01)
-
-    # NMF hard vs. soft
-    utils.printTitle('Hard-margin SVM with TFxIDF & NMF')
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & NMF')
-
-    utils.printTitle('Soft-margin SVM with TFxIDF & NMF')
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
-
-
 def main():
-    foo()
+    pass
 
 
 if __name__ == '__main__':

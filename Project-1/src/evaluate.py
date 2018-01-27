@@ -25,12 +25,12 @@ def evalute(train, test, learning_model, class_names, title = 'Learning Model'):
     learning_model.train(train_x, train_y)
     predicted_y = learning_model.predict(test_x)
 
-    # print(classification_report(test_y, predicted_y, target_names=class_names))
-    analysis_report(test_y, predicted_y, class_names)
-
     # Print ROC curve
     decision_func = learning_model.predictScore(test_x)
     utils.printROC(test_y, decision_func, title)
+    
+    # print(classification_report(test_y, predicted_y, target_names=class_names))
+    analysis_report(test_y, predicted_y, class_names)
 
 
 def crossValidation(dataset, k, learning_model, class_names, title):
