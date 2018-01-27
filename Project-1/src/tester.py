@@ -36,7 +36,8 @@ def testerB():
 
 
 #######################################################################
-# tester for task c: TFxICF
+# tester for task c:
+#   TFxICF: Top-10 words
 #######################################################################
 def testerC():
     train_set = data.DataLoader(category='all', mode='train')
@@ -45,9 +46,14 @@ def testerC():
         enable_stem = True, enable_log = False)
 
     categories = train_set.getAllCategories()
+    target_categories = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
+        'misc.forsale', 'soc.religion.christian']
 
-    # print top-10 words from each category 
+    # print top-10 words from each target category
     for i in range(0, len(categories)):
+        if categories[i] not in target_categories:
+            continue
+
         top_10_words = []
 
         for cnt in range(0, 10):
@@ -142,51 +148,12 @@ def testerF():
 #   multinomial naive Bayes classifier
 #######################################################################
 def testerG():
-    # get dataset
-    class_names = ['Computer technology', 'Recreational activity']
-    train_set = data.DataLoader(category='class_8', mode='train')
-    test_set = data.DataLoader(category='class_8', mode='test')
-
-    # calculate training set feature vector
-    train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
-    lsi_train_tfxidf = feature.minMaxScaler(lsi_train_tfxidf)
-    nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
-
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    train_labels = train_set.getLabelVec()
-    train_labels = [0 if l < 4 else 1 for l in train_labels]
-
-    # calculate testing set feature vector
-    test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
-        enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
-    lsi_test_tfxidf = feature.minMaxScaler(lsi_test_tfxidf)
-    nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    test_labels = test_set.getLabelVec()
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
-
     # create Naive Bayes Learning Model
     nb_model = naiveBayes.NaiveBayes()
 
-    # LSI
-    title = 'Multinomial NaiveBayes with TFxIDF & LSI'
-    utils.printTitle(title)
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        nb_model, class_names, title)
-
-    # NMF
-    title = 'Multinomial NaiveBayes with TFxIDF & NMF'
-    utils.printTitle(title)
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        nb_model, class_names, title)
+    # start testing pipeline
+    testingPipeline(nb_model, 2, 'Multinomial NaiveBayes with TFxIDF', 
+        enable_minmax_scale=True)
 
 
 #######################################################################
@@ -238,7 +205,7 @@ tester_function = [
     testerJ
 ]
 
-def testingPipeline(learning_model, min_df, title):
+def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False):
     # get dataset
     class_names = ['Computer technology', 'Recreational activity']
     train_set = data.DataLoader(category='class_8', mode='train')
@@ -246,13 +213,15 @@ def testingPipeline(learning_model, min_df, title):
 
     # feature extraction with LSI
     lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
-        train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi', 
-        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True)
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+        enable_minmax_scale=enable_minmax_scale)
 
     # feature extraction with NMF
     nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
         train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
-        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True)
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
+        enable_minmax_scale=enable_minmax_scale)
     
     # renaming training set labels
     #   0 -> computer technology [0, 4]

@@ -87,7 +87,7 @@ def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, ena
 # Feature Extraction Pipeline
 #######################################################################
 def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
-             enable_stopword = True, enable_stem = True, enable_log=True):
+             enable_stopword = True, enable_stem = True, enable_log=True, enable_minmax_scale=False):
     if feature not in ['tfidf']:
         print('[featurePipeline ERROR]: no such option %s' % (feature))
 
@@ -111,10 +111,10 @@ def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
     elif reduction == 'nmf':
         reducer = sklearnNMF(n_components=k, init='random', random_state=42)
 
-    return startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_log)
+    return startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_minmax_scale, enable_log)
 
 
-def startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_log):
+def startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_minmax_scale, enable_log):
     # tokenize documents
     train_tkn =  vectorizer.fit_transform(train_x)
     test_tkn = vectorizer.transform(test_x)
@@ -127,7 +127,13 @@ def startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_log):
     train_feature_reduced = reducer.fit_transform(train_feature)
     test_feature_reduced = reducer.transform(test_feature)
 
+    # min-max scaler, map vec into range (0, 1)
+    if enable_minmax_scale:
+        train_feature_reduced = minMaxScaler(train_feature_reduced)
+        test_feature_reduced = minMaxScaler(test_feature_reduced)
+
     return (train_feature_reduced, test_feature_reduced)
+
 
 #######################################################################
 # LSI - Latent Semantic Indexing
@@ -156,13 +162,14 @@ def NMF(feature_vec, k = 50):
 
     return nmf_vec
 
+
 #######################################################################
 # Min Max Scaler
 #
 # vec will be mapped into range (0, 1)
 #######################################################################
 def minMaxScaler(vec):
-    min_max = MinMaxScaler()
+    min_max = MinMaxScaler(feature_range=(0, 1))
     
     return min_max.fit_transform(vec)
 
