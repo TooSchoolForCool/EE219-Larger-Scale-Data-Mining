@@ -89,8 +89,8 @@ def testerE():
     soft_svm = svm.SVM(model_type = 'binary', penalty = 0.001)
 
     # start testing pipeline
-    testingPipeline(hard_svm, 2, 'Hard-margin SVM with TFxIDF')
-    testingPipeline(soft_svm, 2, 'Soft-margin SVM with TFxIDF')
+    testingPipeline([hard_svm, soft_svm], 2, 
+        ['Hard-margin SVM with TFxIDF', 'Soft-margin SVM with TFxIDF'])
 
 
 #######################################################################
@@ -155,7 +155,7 @@ def testerG():
     nb_model = naiveBayes.NaiveBayes()
 
     # start testing pipeline
-    testingPipeline(nb_model, 2, 'Multinomial NaiveBayes with TFxIDF', 
+    testingPipeline([nb_model], 2, ['Multinomial NaiveBayes with TFxIDF'], 
         enable_minmax_scale=True, no_reduce=True)
 
 
@@ -168,7 +168,7 @@ def testerH():
     lg_model = regression.LogisticRegression(penalty=1)
 
     # start testing pipeline
-    testingPipeline(lg_model, 2, 'Logistic Regression with TFxIDF')
+    testingPipeline([lg_model], 2, ['Logistic Regression with TFxIDF'])
 
 
 #######################################################################
@@ -181,8 +181,8 @@ def testerI():
     l2_lg_model = regression.LogisticRegression(penalty=1, regularization='l2')
 
     # start testing pipeline
-    testingPipeline(l1_lg_model, 2, 'L1-Logistic Regression with TFxIDF')
-    testingPipeline(l2_lg_model, 2, 'L2-Logistic Regression with TFxIDF')
+    testingPipeline([l1_lg_model, l2_lg_model], 2, 
+        ['L1-Logistic Regression with TFxIDF', 'L2-Logistic Regression with TFxIDF'])
 
 
 #######################################################################
@@ -208,7 +208,54 @@ tester_function = [
     testerJ
 ]
 
-def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False, no_reduce=False):
+# def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False, no_reduce=False):
+#     # get dataset
+#     class_names = ['Computer technology', 'Recreational activity']
+#     train_set = data.DataLoader(category='class_8', mode='train')
+#     test_set = data.DataLoader(category='class_8', mode='test')
+
+#     # feature extraction with LSI
+#     lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
+#         train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
+#         k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+#         enable_minmax_scale=enable_minmax_scale)
+
+#     # feature extraction with NMF
+#     nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
+#         train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
+#         k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
+#         enable_minmax_scale=enable_minmax_scale)
+    
+#     # renaming training set labels
+#     #   0 -> computer technology [0, 4]
+#     #   1 -> recreation [5, 7]
+#     train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
+#     test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
+
+#     # Testing for LSI feature
+#     utils.printTitle(title + ' [LSI]')
+#     evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+#         learning_model, class_names, title + ' [LSI]')
+
+#     # Testing for NMF feature
+#     utils.printTitle(title + ' [NMF]')
+#     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+#         learning_model, class_names, title + ' [NMF]')
+
+#     # Testing for Non-demensionality Reduction
+#     if no_reduce:
+#         # get original tfidf feature
+#         train_tfxidf, test_tfxidf = feature.pipeline(
+#             train_set.getData(), test_set.getData(), feature='tfidf', reduction=None,
+#             k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+#             enable_minmax_scale=enable_minmax_scale)
+
+#         utils.printTitle(title)
+#         evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
+#             learning_model, class_names, title)
+
+
+def testingPipeline(models, min_df, titles, enable_minmax_scale=False, no_reduce=False):
     # get dataset
     class_names = ['Computer technology', 'Recreational activity']
     train_set = data.DataLoader(category='class_8', mode='train')
@@ -232,28 +279,28 @@ def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False, no
     train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
     test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
 
-    # Testing for LSI feature
-    utils.printTitle(title + ' [LSI]')
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        learning_model, class_names, title + ' [LSI]')
+    for (learning_model, title) in zip(models, titles):
+        # Testing for LSI feature
+        utils.printTitle(title + ' [LSI]')
+        evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+            learning_model, class_names, title + ' [LSI]')
 
-    # Testing for NMF feature
-    utils.printTitle(title + ' [NMF]')
-    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-        learning_model, class_names, title + ' [NMF]')
+        # Testing for NMF feature
+        utils.printTitle(title + ' [NMF]')
+        evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+            learning_model, class_names, title + ' [NMF]')
 
-    # Testing for Non-demensionality Reduction
-    if no_reduce:
-        # get original tfidf feature
-        train_tfxidf, test_tfxidf = feature.pipeline(
-            train_set.getData(), test_set.getData(), feature='tfidf', reduction=None,
-            k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
-            enable_minmax_scale=enable_minmax_scale)
+        # Testing for Non-demensionality Reduction
+        if no_reduce:
+            # get original tfidf feature
+            train_tfxidf, test_tfxidf = feature.pipeline(
+                train_set.getData(), test_set.getData(), feature='tfidf', reduction=None,
+                k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+                enable_minmax_scale=enable_minmax_scale)
 
-        utils.printTitle(title)
-        evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
-            learning_model, class_names, title)
-
+            utils.printTitle(title)
+            evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
+                learning_model, class_names, title)
 
 # tester function booter
 def startTester(task):
