@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import NMF as sklearnNMF
 
 import data
 import utils
@@ -86,38 +88,39 @@ def testerE():
     train_tfxidf, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
     lsi_train_tfxidf = feature.LSI(train_tfxidf, 50)
+    print(type(lsi_train_tfxidf))
+    print(lsi_train_tfxidf)
     nmf_train_tfxidf = feature.NMF(train_tfxidf, 50)
+    print(type(nmf_train_tfxidf))
+    print(nmf_train_tfxidf)
+    
+    train_labels = train_set.getLabelVec()
+    test_labels = test_set.getLabelVec()
 
     # renaming training set labels
     #   0 -> computer technology [0, 4]
     #   1 -> recreation [5, 7]
-    train_labels = train_set.getLabelVec()
     train_labels = [0 if l < 4 else 1 for l in train_labels]
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # calculate testing set feature vector
     test_tfxidf, _ = feature.calcTFxIDF(test_set.getData(), min_df = 2, enable_stopword = True, 
         enable_stem = True, enable_log = True)
-    lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
+    # lsi_test_tfxidf = feature.LSI(test_tfxidf, 50)
     nmf_test_tfxidf = feature.NMF(test_tfxidf, 50)
-
-    # renaming training set labels
-    #   0 -> computer technology [0, 4]
-    #   1 -> recreation [5, 7]
-    test_labels = test_set.getLabelVec()
-    test_labels = [0 if l < 4 else 1 for l in test_labels]
 
     # declare SVM model
     hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
     soft_svm = svm.SVM(model_type = 'binary', penalty = 0.001)
 
     # LSI hard vs. soft
-    utils.printTitle('Hard-margin SVM with TFxIDF & LSI')
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & LSI')
+    # utils.printTitle('Hard-margin SVM with TFxIDF & LSI')
+    # evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+    #     hard_svm, class_names, 'Hard-margin SVM with TFxIDF & LSI')
 
-    utils.printTitle('Soft-margin SVM with TFxIDF & LSI')
-    evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & LSI')
+    # utils.printTitle('Soft-margin SVM with TFxIDF & LSI')
+    # evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+    #     soft_svm, class_names, 'Soft-margin SVM with TFxIDF & LSI')
 
     # NMF hard vs. soft
     utils.printTitle('Hard-margin SVM with TFxIDF & NMF')
@@ -425,8 +428,41 @@ def startTester(task):
     tester_function[idx]()
 
 
+def foo():
+    # get dataset
+    class_names = ['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='class_8', mode='train')
+    test_set = data.DataLoader(category='class_8', mode='test')
+
+    # feature extraction
+    nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
+        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True)
+    
+    train_labels = train_set.getLabelVec()
+    test_labels = test_set.getLabelVec()
+    # renaming training set labels
+    #   0 -> computer technology [0, 4]
+    #   1 -> recreation [5, 7]
+    train_labels = [0 if l < 4 else 1 for l in train_labels]
+    test_labels = [0 if l < 4 else 1 for l in test_labels]
+
+    # declare SVM model
+    hard_svm = svm.SVM(model_type = 'binary', penalty = 1000)
+    soft_svm = svm.SVM(model_type = 'binary', penalty = 0.01)
+
+    # NMF hard vs. soft
+    utils.printTitle('Hard-margin SVM with TFxIDF & NMF')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        hard_svm, class_names, 'Hard-margin SVM with TFxIDF & NMF')
+
+    utils.printTitle('Soft-margin SVM with TFxIDF & NMF')
+    evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+        soft_svm, class_names, 'Soft-margin SVM with TFxIDF & NMF')
+
+
 def main():
-    pass
+    foo()
 
 
 if __name__ == '__main__':

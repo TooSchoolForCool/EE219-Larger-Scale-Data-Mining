@@ -84,6 +84,52 @@ def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, ena
 
 
 #######################################################################
+# Feature Extraction Pipeline
+#######################################################################
+def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,
+             enable_stopword = True, enable_stem = True, enable_log=True):
+    if feature not in ['tfidf']:
+        print('[featurePipeline ERROR]: no such option %s' % (feature))
+
+    if reduction not in ['lsi', 'nmf']:
+        print('[featurePipeline ERROR]: no such option %s' % (reducer))
+
+    # stopwords and tokenizer config
+    stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
+    tokenizer = stemming_tokenizer if enable_stem else None
+
+    # define word tokenizer (vectorizer)
+    vectorizer = CountVectorizer(analyzer='word', min_df=min_df, tokenizer=tokenizer, stop_words=stop_words)
+    
+    # define feature extractor
+    if feature == 'tfidf':
+        extractor = TfidfTransformer()
+    
+    # define reducer
+    if reduction == 'lsi':
+        reducer = TruncatedSVD(n_components = k, random_state = 42)
+    elif reduction == 'nmf':
+        reducer = sklearnNMF(n_components=k, init='random', random_state=42)
+
+    return startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_log)
+
+
+def startPipeline(train_x, test_x, vectorizer, extractor, reducer, enable_log):
+    # tokenize documents
+    train_tkn =  vectorizer.fit_transform(train_x)
+    test_tkn = vectorizer.transform(test_x)
+
+    # extract features
+    train_feature = extractor.fit_transform(train_tkn)
+    test_feature = extractor.transform(test_tkn)
+
+    # Dimensionality reduction
+    train_feature_reduced = reducer.fit_transform(train_feature)
+    test_feature_reduced = reducer.transform(test_feature)
+
+    return (train_feature_reduced, test_feature_reduced)
+
+#######################################################################
 # LSI - Latent Semantic Indexing
 #
 # A way to perform dimensionality reduction by using SVD
