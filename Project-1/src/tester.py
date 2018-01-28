@@ -90,7 +90,9 @@ def testerE():
 
     # start testing pipeline
     testingPipeline([hard_svm, soft_svm], 2, 
-        ['Hard-margin SVM with TFxIDF ', 'Soft-margin SVM with TFxIDF'])
+         ['Hard-margin SVM with TFxIDF [min_df = 2]', 'Soft-margin SVM with TFxIDF [min_df = 2]'])
+    testingPipeline([hard_svm, soft_svm], 5, 
+        ['Hard-margin SVM with TFxIDF [min_df = 5] ', 'Soft-margin SVM with TFxIDF [min_df = 5]'])
 
 
 #######################################################################
@@ -155,9 +157,10 @@ def testerG():
     nb_model = naiveBayes.NaiveBayes()
 
     # start testing pipeline
-    testingPipeline([nb_model], 2, ['Multinomial NaiveBayes with TFxIDF'], 
+    testingPipeline([nb_model], 2, ['Multinomial NaiveBayes with TFxIDF min_df=2'], 
         enable_minmax_scale=True, no_reduce=True)
-
+    testingPipeline([nb_model], 5, ['Multinomial NaiveBayes with TFxIDF min_df=5'], 
+        enable_minmax_scale=True, no_reduce=True)
 
 #######################################################################
 # Tester for task H:
@@ -169,7 +172,7 @@ def testerH():
 
     # start testing pipeline
     testingPipeline([lg_model], 2, ['Logistic Regression with TFxIDF'])
-
+    testingPipeline([lg_model], 5, ['Logistic Regression with TFxIDF'])
 
 #######################################################################
 # Tester for task I:
@@ -187,7 +190,7 @@ def testerI():
 
     # start testing pipeline
     testingPipeline(models, 2, titles)
-
+    testingPipeline(models, 5, titles)
 
 #######################################################################
 # Tester for task J:
