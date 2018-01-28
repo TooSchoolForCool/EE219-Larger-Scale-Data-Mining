@@ -90,7 +90,7 @@ def testerE():
 
     # start testing pipeline
     testingPipeline([hard_svm, soft_svm], 2, 
-        ['Hard-margin SVM with TFxIDF', 'Soft-margin SVM with TFxIDF'])
+        ['Hard-margin SVM with TFxIDF ', 'Soft-margin SVM with TFxIDF'])
 
 
 #######################################################################
@@ -177,12 +177,16 @@ def testerH():
 #######################################################################
 def testerI():
     # create Naive Bayes Learning Model
-    l1_lg_model = regression.LogisticRegression(penalty=1, regularization='l1')
-    l2_lg_model = regression.LogisticRegression(penalty=1, regularization='l2')
+    models, titles = [], []
+
+    for c in [0.001, 0.01, 0.1, 1, 10]:
+        models.append(regression.LogisticRegression(penalty=c, regularization='l1'))
+        models.append(regression.LogisticRegression(penalty=c, regularization='l2'))
+        titles.append('[C = ' + str(c) + '] L1-Logistic Regression with TFxIDF')
+        titles.append('[C = ' + str(c) + '] L2-Logistic Regression with TFxIDF')
 
     # start testing pipeline
-    testingPipeline([l1_lg_model, l2_lg_model], 2, 
-        ['L1-Logistic Regression with TFxIDF', 'L2-Logistic Regression with TFxIDF'])
+    testingPipeline(models, 2, titles)
 
 
 #######################################################################
@@ -191,8 +195,50 @@ def testerI():
 #   Naive Bayes & SVM
 #######################################################################
 def testerJ():
-    pass
+    
+    models, titles = [], []
 
+    models.append(svm.SVM(model_type = 'multy1', penalty=1))
+    models.append(svm.SVM(model_type = 'multy2', penalty=1))
+    #models.append(naiveBayes.NaiveBayes())
+    min_df=2
+    titles.append('Multy SVM ovo with TFIDF threshold is 2')
+    titles.append('Multy SVM ovr with TFIDF threshold is 2')
+    #titles.append('Multinomial NaiveBayes with TFIDF threshold is 5')
+   
+ #   testingPipeline(models, 2, titles)
+    # get dataset
+    class_names = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
+        'misc.forsale', 'soc.religion.christian']
+    #['Computer technology', 'Recreational activity']
+    train_set = data.DataLoader(category='target', mode='train')
+    test_set = data.DataLoader(category='target', mode='test')
+
+    # feature extraction with LSI
+    lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
+        enable_minmax_scale=True)
+
+    # feature extraction with NMF
+    nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
+        train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
+        k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
+        enable_minmax_scale=True)
+    
+    train_labels = train_set.getLabelVec()
+    test_labels = test_set.getLabelVec()
+
+    for (learning_model, title) in zip(models, titles):
+        # Testing for LSI feature
+        utils.printTitle(title + ' [LSI]')
+        evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
+            learning_model, class_names, title + ' [LSI]',roc='false')
+
+        # Testing for NMF feature
+        utils.printTitle(title + ' [NMF]')
+        evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
+            learning_model, class_names, title + ' [NMF]',roc='false')
 
 # a list of function
 tester_function = [

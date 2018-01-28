@@ -18,6 +18,9 @@ class DataLoader(object):
         # load dataset
         if(category == 'recreation'):
             self.dataset = fetch_20newsgroups(subset=mode, categories=RECREATION_ACT, shuffle=True, random_state=42)
+        elif(category == 'target'):
+            self.dataset = fetch_20newsgroups(subset=mode, categories=['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
+        'misc.forsale', 'soc.religion.christian'], shuffle=True, random_state=42)
         elif(category == 'tech'):
             self.dataset = fetch_20newsgroups(subset=mode, categories=COMPUTER_TECH, shuffle=True, random_state=42)
         elif(category == 'class_8'):

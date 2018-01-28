@@ -18,8 +18,13 @@ class SVM(object):
     #######################################################################
     def __init__(self, model_type = 'binary', penalty = 1.0):
         # model_type = 'ovr' if model_type == 'binary' else 'ovo'
-
-        self.svm_model_ = svm.LinearSVC(C=penalty)
+        if model_type == 'binary':
+            self.svm_model_ = svm.LinearSVC(C=penalty)
+        elif model_type == 'multy1':
+            self.svm_model_ = svm.SVC(decision_function_shape='ovo')
+        elif model_type == 'multy2':
+            self.svm_model_ = svm.SVC(decision_function_shape='ovr')
+           
         # self.svm_model_ = svm.SVC(kernel='rbf', C=penalty)
 
     #######################################################################

@@ -15,7 +15,7 @@ import utils
 #   learning_model: 
 #       learning model with interface `train` and `predict`
 #######################################################################
-def evalute(train, test, learning_model, class_names, title = 'Learning Model'):
+def evalute(train, test, learning_model, class_names, title = 'Learning Model', roc='true'):
     train_x = train[0]
     train_y = train[1]
 
@@ -25,9 +25,11 @@ def evalute(train, test, learning_model, class_names, title = 'Learning Model'):
     learning_model.train(train_x, train_y)
     predicted_y = learning_model.predict(test_x)
 
+    if (roc=='true'):
     # Print ROC curve
-    decision_func = learning_model.predictScore(test_x)
-    utils.printROC(test_y, decision_func, title)
+        decision_func = learning_model.predictScore(test_x)
+    
+        utils.printROC(test_y, decision_func, title)
     
     # print(classification_report(test_y, predicted_y, target_names=class_names))
     analysis_report(test_y, predicted_y, class_names)
