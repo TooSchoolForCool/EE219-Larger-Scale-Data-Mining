@@ -21,7 +21,7 @@ def testerA():
 # tester for task b: TFxIDF
 #######################################################################
 def testerB():
-    train_set = data.DataLoader(category='debug', mode='train')
+    train_set = data.DataLoader(category='class_8', mode='train')
 
     # min_df == 2
     train_TFxIDF, _ = feature.calcTFxIDF(train_set.getData(), min_df = 2, enable_stopword = True, 
@@ -195,18 +195,16 @@ def testerI():
 #   Naive Bayes & SVM
 #######################################################################
 def testerJ():
-    
     models, titles = [], []
 
     models.append(svm.SVM(model_type = 'multy1', penalty=1))
     models.append(svm.SVM(model_type = 'multy2', penalty=1))
     #models.append(naiveBayes.NaiveBayes())
     min_df=2
-    titles.append('Multy SVM ovo with TFIDF threshold is 2')
-    titles.append('Multy SVM ovr with TFIDF threshold is 2')
+    titles.append('Multy SVM ovo with TFIDF [min_df = 2]')
+    titles.append('Multy SVM ovr with TFIDF [min_df = 2]')
     #titles.append('Multinomial NaiveBayes with TFIDF threshold is 5')
    
- #   testingPipeline(models, 2, titles)
     # get dataset
     class_names = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
         'misc.forsale', 'soc.religion.christian']
@@ -240,6 +238,7 @@ def testerJ():
         evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
             learning_model, class_names, title + ' [NMF]',roc='false')
 
+
 # a list of function
 tester_function = [
     testerA,
@@ -253,52 +252,6 @@ tester_function = [
     testerI,
     testerJ
 ]
-
-# def testingPipeline(learning_model, min_df, title, enable_minmax_scale=False, no_reduce=False):
-#     # get dataset
-#     class_names = ['Computer technology', 'Recreational activity']
-#     train_set = data.DataLoader(category='class_8', mode='train')
-#     test_set = data.DataLoader(category='class_8', mode='test')
-
-#     # feature extraction with LSI
-#     lsi_train_tfxidf, lsi_test_tfxidf = feature.pipeline(
-#         train_set.getData(), test_set.getData(), feature='tfidf', reduction='lsi',
-#         k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
-#         enable_minmax_scale=enable_minmax_scale)
-
-#     # feature extraction with NMF
-#     nmf_train_tfxidf, nmf_test_tfxidf = feature.pipeline(
-#         train_set.getData(), test_set.getData(), feature='tfidf', reduction='nmf', 
-#         k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True,
-#         enable_minmax_scale=enable_minmax_scale)
-    
-#     # renaming training set labels
-#     #   0 -> computer technology [0, 4]
-#     #   1 -> recreation [5, 7]
-#     train_labels = [0 if l < 4 else 1 for l in train_set.getLabelVec()]
-#     test_labels = [0 if l < 4 else 1 for l in test_set.getLabelVec()]
-
-#     # Testing for LSI feature
-#     utils.printTitle(title + ' [LSI]')
-#     evaluate.evalute((lsi_train_tfxidf, train_labels), (lsi_test_tfxidf, test_labels), 
-#         learning_model, class_names, title + ' [LSI]')
-
-#     # Testing for NMF feature
-#     utils.printTitle(title + ' [NMF]')
-#     evaluate.evalute((nmf_train_tfxidf, train_labels), (nmf_test_tfxidf, test_labels), 
-#         learning_model, class_names, title + ' [NMF]')
-
-#     # Testing for Non-demensionality Reduction
-#     if no_reduce:
-#         # get original tfidf feature
-#         train_tfxidf, test_tfxidf = feature.pipeline(
-#             train_set.getData(), test_set.getData(), feature='tfidf', reduction=None,
-#             k=50, min_df=min_df, enable_stopword = True, enable_stem = True, enable_log=True, 
-#             enable_minmax_scale=enable_minmax_scale)
-
-#         utils.printTitle(title)
-#         evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
-#             learning_model, class_names, title)
 
 
 def testingPipeline(models, min_df, titles, enable_minmax_scale=False, no_reduce=False):
@@ -347,6 +300,7 @@ def testingPipeline(models, min_df, titles, enable_minmax_scale=False, no_reduce
             utils.printTitle(title)
             evaluate.evalute((train_tfxidf, train_labels), (test_tfxidf, test_labels), 
                 learning_model, class_names, title)
+
 
 # tester function booter
 def startTester(task):

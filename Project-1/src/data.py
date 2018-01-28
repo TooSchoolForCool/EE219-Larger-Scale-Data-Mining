@@ -17,21 +17,21 @@ class DataLoader(object):
     def __init__(self, category="all", mode="all"):
         # load dataset
         if(category == 'recreation'):
-            self.dataset = fetch_20newsgroups(subset=mode, categories=RECREATION_ACT, shuffle=True, random_state=42)
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories=RECREATION_ACT, shuffle=True, random_state=42)
         elif(category == 'target'):
-            self.dataset = fetch_20newsgroups(subset=mode, categories=['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories=['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
         'misc.forsale', 'soc.religion.christian'], shuffle=True, random_state=42)
         elif(category == 'tech'):
-            self.dataset = fetch_20newsgroups(subset=mode, categories=COMPUTER_TECH, shuffle=True, random_state=42)
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories=COMPUTER_TECH, shuffle=True, random_state=42)
         elif(category == 'class_8'):
-            self.dataset = fetch_20newsgroups(subset=mode, categories=TEST_SET, shuffle=True, random_state=42)
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories=TEST_SET, shuffle=True, random_state=42)
         elif(category == 'all'):
-            self.dataset = fetch_20newsgroups(subset=mode, shuffle=True, random_state=42)
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, shuffle=True, random_state=42)
         elif(category == 'debug'):
-            self.dataset = fetch_20newsgroups(subset=mode, categories = ['comp.graphics', 'comp.os.ms-windows.misc'], 
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories = ['comp.graphics', 'comp.os.ms-windows.misc'], 
                 shuffle=True, random_state=42)
         else:
-            self.dataset = fetch_20newsgroups(subset=mode, categories = category, shuffle=True, random_state=42)
+            self.dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, categories = category, shuffle=True, random_state=42)
 
         # calculate size of dataset
         self.length = len(self.dataset.data)
