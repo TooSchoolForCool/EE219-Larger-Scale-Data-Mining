@@ -45,24 +45,31 @@ def testerC():
         enable_stem = True, enable_log = False)
 
     categories = train_set.getAllCategories()
-    target_categories = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
-        'misc.forsale', 'soc.religion.christian']
+    target_categories = ('comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
+        'misc.forsale', 'soc.religion.christian')
+
+    top_10_words = {key : [] for key in target_categories}
 
     # print top-10 words from each target category
     for i in range(0, len(categories)):
         if categories[i] not in target_categories:
             continue
 
-        top_10_words = []
-
         for cnt in range(0, 10):
             top_freq_idx = np.argmax(train_TFxICF[i])
             # remove current most frequent word
             train_TFxICF[i, top_freq_idx] = 0.0
             # append current most frequent word in to list
-            top_10_words.append( word_list[top_freq_idx] )  
+            top_10_words[categories[i]].append( word_list[top_freq_idx] )  
 
-        print("%s %r" % (categories[i], top_10_words))
+    print('%s\t%s\t%s\t%s' % target_categories)
+    for i in range(0, 10):
+        print('%s\t%s\t%s\t%s' % (
+            top_10_words[target_categories[0]][i],
+            top_10_words[target_categories[1]][i],
+            top_10_words[target_categories[2]][i],
+            top_10_words[target_categories[3]][i])
+        )
 
 #######################################################################
 # Tester for task d: Feature Selection (LSI) (NMF)

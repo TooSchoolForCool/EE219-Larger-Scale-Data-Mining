@@ -68,8 +68,8 @@ def calcTFxIDF(docs, min_df = 1, enable_stopword = True, enable_stem = True, ena
     # get documents tokens
     tokenizer = stemming_tokenizer if enable_stem else None
     
-    vectorizer = CountVectorizer(analyzer='word', min_df=min_df, tokenizer=tokenizer, stop_words=stop_words)
-    # vectorizer = tkn.MyTokenizer(min_df=min_df)
+    #vectorizer = CountVectorizer(analyzer='word', min_df=min_df, tokenizer=tokenizer, stop_words=stop_words)
+    vectorizer = tkn.MyTokenizer(min_df=min_df)
     
     tfidf_transformer = TfidfTransformer()
 
