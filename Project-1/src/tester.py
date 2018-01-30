@@ -209,16 +209,15 @@ def testerJ():
 
     models.append(svm.SVM(model_type = 'multy1', penalty=1))
     models.append(svm.SVM(model_type = 'multy2', penalty=1))
-    #models.append(naiveBayes.NaiveBayes())
+    models.append(naiveBayes.NaiveBayes())
     min_df=2
     titles.append('Multy SVM ovo with TFIDF [min_df = 2]')
     titles.append('Multy SVM ovr with TFIDF [min_df = 2]')
-    #titles.append('Multinomial NaiveBayes with TFIDF threshold is 5')
+    titles.append('Multinomial NaiveBayes with TFIDF threshold is 5')
    
     # get dataset
     class_names = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
         'misc.forsale', 'soc.religion.christian']
-    #['Computer technology', 'Recreational activity']
     train_set = data.DataLoader(category='target', mode='train')
     test_set = data.DataLoader(category='target', mode='test')
 
