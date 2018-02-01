@@ -2,6 +2,7 @@ from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 # plot histogram based on the number of documents in each topic
 # in the dateset
 def plotHist(dataset):
@@ -34,10 +35,11 @@ def plotHist(dataset):
     # fig.savefig('foo.png', bbox_inches='tight')
     plt.show()
 
+
 #######################################################################
 # Print Title for each task
 #######################################################################
-def printTitle(msg, length = 60):
+def print_title(msg, length = 60):
     print('*' * length)
     print('* %s' % msg)
     print('*' * length)
@@ -63,6 +65,7 @@ def printROC(test_y, predict_y_score, title='Learning Model'):
 
 def main():
     pass
+
 
 if __name__ == '__main__':
     main()

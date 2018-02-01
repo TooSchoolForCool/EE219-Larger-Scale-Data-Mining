@@ -1,6 +1,7 @@
 import tester
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser(description='EE219 Project 2')
 
@@ -12,6 +13,7 @@ def main():
     args = vars(parser.parse_args())
 
     tester.startTester(args['task'])
+
 
 if __name__ == '__main__':
     main()
