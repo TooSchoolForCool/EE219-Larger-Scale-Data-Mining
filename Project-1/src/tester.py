@@ -218,7 +218,6 @@ def testerJ():
     # get dataset
     class_names = ['comp.sys.ibm.pc.hardware', 'comp.sys.mac.hardware',
         'misc.forsale', 'soc.religion.christian']
-    #['Computer technology', 'Recreational activity']
     train_set = data.DataLoader(category='target', mode='train')
     test_set = data.DataLoader(category='target', mode='test')
 
