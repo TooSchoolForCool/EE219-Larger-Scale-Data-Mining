@@ -19,7 +19,7 @@ def eval_report(ground_truth, predicted_labels, msg=""):
             msg is not empty
     """
     if msg != "":
-        print('-----%s-----' % msg)
+        print('%s' % msg)
 
     print("Homogeneity\t%.4lf" % metrics.homogeneity_score(ground_truth, predicted_labels))
     print("Completeness\t%.4lf" % metrics.completeness_score(ground_truth, predicted_labels))
@@ -43,6 +43,14 @@ def contingency_matrix(ground_truth, predicted_labels, n_clusters, msg=""):
         msg: [string] optional. Print out a message title if
             msg is not empty
     """
+    # calculate contingenct matrix
+    mat_dict = {(i, j) : 0 for i in range(0, n_clusters) for j in range(0, n_clusters)}
+    for i, j in zip(ground_truth, predicted_labels):
+        # check if data sample appear in both ground truth and predicted cluster
+        # Here 'i' is the index of ground truth, 
+        # 'j' is the index of predicted cluster
+        mat_dict[(i, j)] += 1
+
     if msg != "":
         print('-----%s-----' % msg)
 
@@ -58,20 +66,12 @@ def contingency_matrix(ground_truth, predicted_labels, n_clusters, msg=""):
         # start new row, print class id
         class_id = "class_%d\t" % i
         print("%-10s" % class_id),
+        # print number of samples in correct set (class_id == cluster_id)
         for j in range(0, n_clusters):
-            cnt = 0
-            # check if data sample appear in both ground truth and predicted cluster
-            # Here 'i' is the index of ground truth, 
-            # 'j' is the index of predicted cluster
-            for gold, predict in zip(ground_truth, predicted_labels):
-                if gold == i and predict == j:
-                    cnt += 1
-            print("%-10d" % cnt),
+            print("%-10d" % mat_dict[(i, j)]),
         print("")
 
     
-
-
 def main():
     pass
 

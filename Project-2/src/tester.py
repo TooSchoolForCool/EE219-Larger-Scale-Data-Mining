@@ -76,13 +76,13 @@ def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
 
     # create x-axis
     r = [i + 1 for i in range(0, dimension)]
-
+    
     plt.plot(r, lsi_raitos, "r", r, nmf_raitos, "b")
     plt.legend(("LSI", "NMF"), loc=0)
     plt.title('[LSI & NMF] The ratio of variance the top %d principle components' % dimension)
     plt.xlabel("r")
     plt.ylabel("Ratio of Variance")
-    plt.show()
+    plt.savefig('task_3_a.png')
 
 
 # tester for task 3 part(b)
@@ -93,16 +93,16 @@ def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
     # test LSI
     for case in testcases:
         predicted_labels = kmeans.predict(lsi_tfidf[:, :case])
-        evaluate.eval_report(ground_truth, predicted_labels, "[LSI] r = %d" % case)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----[LSI] r = %d-----" % case)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
-            msg="[LSI] r = %d Contingency Matrix" % case)
+            msg="Contingency Matrix")
 
     # test NMF
     for case in testcases:
         predicted_labels = kmeans.predict(nmf_tfidf[:, :case])
-        evaluate.eval_report(ground_truth, predicted_labels, "[NMF] r = %d" % case)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----[NMF] r = %d-----" % case)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
-            msg="[NMF] r = %d Contingency Matrix" % case)
+            msg="Contingency Matrix")
 
 
 # a list of function
