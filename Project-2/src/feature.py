@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from string import punctuation
 
+
 # Here define a list of stopwords
 # [word1, word2, ...]
 stop_words_skt = ENGLISH_STOP_WORDS
@@ -19,6 +20,13 @@ class DataVectorizer(object):
     Data vectorizer converts raw documents into a TFxIDF matric. During
     the convertion process, one can choose to remove stopwords or perform
     stemming.
+
+    Attributes:
+        _vocabulary: sklearn CountVectorizer instance, which stored a list 
+            of words which appeared in training corpus. Words did not pass
+            the filter will not be listed in vocabulary.
+        _tfidf_transformer: sklearn TfidfTransformer. Convert a document
+            word vectori into a TF-IDF vector.
     """
 
     def __init__(self, min_df=2, rm_stopword=True, enable_stem=False):
@@ -32,7 +40,7 @@ class DataVectorizer(object):
                 building the vocabulary.
         """
         stopwords = combined_stopwords if rm_stopword else None
-            
+        
         self._vocabulary = CountVectorizer(min_df=min_df, stop_words=stopwords)
         self._tfidf_transformer = TfidfTransformer()
 
