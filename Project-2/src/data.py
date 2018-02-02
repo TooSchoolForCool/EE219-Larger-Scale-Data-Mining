@@ -28,32 +28,38 @@ class DataLoader(object):
         Several subset options are provided
     """
 
-    def __init__(self, category="all", mode="all"):
+    def __init__(self, category="all", mode="all", rm_noise=True):
         """Constructor
 
         Args:
-            category: category of your dataset
-            mode: three modes is provided, including 'all', 'test', 'train'
+            category: [string or list of strings] declare category 
+                of your dataset
+            mode: [string] 3 modes is provided, including 'all',
+                'test', 'train'
+            rm_noise: [boolean] If true remove headers, footers and 
+                quotes in the dataset
         """
+        remove_opt = ('headers', 'footers', 'quotes') if rm_noise else None
+
         if(category == 'rec'):
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
-                categories=RECREATION_ACT, shuffle=True, random_state=42)     
+                categories=RECREATION_ACT, shuffle=True, random_state=42, remove=remove_opt)     
         elif(category == 'tech'):
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
-                categories=COMPUTER_TECH, shuffle=True, random_state=42)
+                categories=COMPUTER_TECH, shuffle=True, random_state=42, remove=remove_opt)
         elif(category == '8_class'):
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
-                categories=TEST_SET, shuffle=True, random_state=42)
+                categories=TEST_SET, shuffle=True, random_state=42, remove=remove_opt)
         elif(category == 'all'):
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
-                shuffle=True, random_state=42)
+                shuffle=True, random_state=42, remove=remove_opt)
         elif(category == 'debug'):
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
                 categories = ['comp.graphics', 'rec.autos'], 
-                shuffle=True, random_state=42)
+                shuffle=True, random_state=42, remove=remove_opt)
         else:
             self._dataset = fetch_20newsgroups(data_home='../data/scikit_learn_data', subset=mode, 
-                categories = category, shuffle=True, random_state=42)
+                categories = category, shuffle=True, random_state=42, remove=remove_opt)
 
         # calculate size of dataset
         self.length = len(self._dataset.data)
