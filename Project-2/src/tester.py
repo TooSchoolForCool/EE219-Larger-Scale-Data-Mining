@@ -40,7 +40,7 @@ def tester_2():
 
 # tester for task 3
 def tester_3():
-    docs = DataLoader(category="debug", mode="test")
+    docs = DataLoader(category="8_class", mode="test")
 
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
     svd = TruncatedSVD(n_components=10, random_state=13)
@@ -50,14 +50,19 @@ def tester_3():
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
     nmf_docs_tfidf = nmf.fit_transform(docs_tfidf)
 
+    # renaming groud truth labels, since we treat 8 classes as only 2 classes
+    ground_truth = [label / 4 for label in docs.get_labels()]
+
     # start task 3 (part a)
+    utils.print_title("Task 3 part(a): Plot ratio of variance")
     tester_3_a(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf)
 
     # start task 3 (part b)
-    tester_3_b(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf)
+    utils.print_title("Task 3 part(b): Testing param for LSI & NMF")
+    tester_3_b(lsi_docs_tfidf, nmf_docs_tfidf, ground_truth)
 
 
-# tester for task 3 part a
+# tester for task 3 part(a)
 def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
     tfidf_variance = utils.calc_mat_variance(tfidf)
 
@@ -78,6 +83,27 @@ def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
     plt.xlabel("r")
     plt.ylabel("Ratio of Variance")
     plt.show()
+
+
+# tester for task 3 part(b)
+def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
+    kmeans = KMeans(n_clusters=2)
+    # testcases = [1, 2, 3, 5, 10, 20, 50, 100, 300]
+    testcases = [1, 2, 3, 5]
+
+    # test LSI
+    for case in testcases:
+        predicted_labels = kmeans.predict(lsi_tfidf[:, :case])
+        evaluate.eval_report(ground_truth, predicted_labels, "[LSI] r = %d" % case)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="[LSI] r = %d Contingency Matrix" % case)
+
+    # test NMF
+    for case in testcases:
+        predicted_labels = kmeans.predict(nmf_tfidf[:, :case])
+        evaluate.eval_report(ground_truth, predicted_labels, "[NMF] r = %d" % case)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="[NMF] r = %d Contingency Matrix" % case)
 
 
 # a list of function
