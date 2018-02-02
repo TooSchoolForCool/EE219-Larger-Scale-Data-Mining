@@ -1,66 +1,49 @@
-from sklearn.metrics import roc_curve
-import matplotlib.pyplot as plt
 import numpy as np
 
 
-# plot histogram based on the number of documents in each topic
-# in the dateset
-def plotHist(dataset):
-    categories = dataset.getAllCategories()
-    y_pos = np.arange( len(categories) )
-
-    counter = dataset.getCategorySize()
-    height = [counter[i] for i in range(0, len(categories))]
-    
-    palette = ['r', 'b', 'y', 'g', 'purple', 'orange', 'pink', 'maroon', '#624ea7']
-    colors = [palette[i % len(palette)] for i in range(0, len(categories))]
-
-    plt.rcdefaults()
-    fig, ax = plt.subplots()
-
-    ax.barh(y_pos, height, align = 'center', color = colors)
-    ax.set_yticks(y_pos)
-    ax.set_yticklabels(categories)
-    ax.set_title('Number of documents in each topic')
-    ax.set_xlabel('Number of documents')
-    ax.set_ylabel('Topic')
-    
-    plt.subplots_adjust(left=0.25)
-
-    # change figure size
-    # fig_size = fig.get_size_inches()
-    # fig.set_size_inches(fig_size[0] * 1.5, fig_size[1], forward=True)
-
-    # size figure in local directory
-    # fig.savefig('foo.png', bbox_inches='tight')
-    plt.show()
-
-
-#######################################################################
-# Print Title for each task
-#######################################################################
 def print_title(msg, length = 60):
+    """
+
+    Print out a title format
+
+    Args:
+        msg: title name
+        length: length of '*'
+
+    ***********************************
+    * <Title Name>
+    ***********************************
+    """
     print('*' * length)
     print('* %s' % msg)
     print('*' * length)
 
 
-#######################################################################
-# Print ROC curve
-#######################################################################
-def printROC(test_y, predict_y_score, title='Learning Model'):
-    fpr, tpr, threshold = roc_curve(test_y, predict_y_score)
+def calc_mat_variance(mat):
+    """calculate variance of a matrix
 
-    line = [0, 1]
-    plt.plot(fpr, tpr)
-    plt.plot([0,1],[0,1])
-    plt.axis([-0.004, 1, 0, 1.006])
+    Suppose a matrix A, the variance of A is the sum of the squares of
+    its singular values. Inorder the get this, we calculate AA'. The sum
+    of diagonal of AA' is the sum of the squares of its (matrix A) sigular
+    values, which is the variance we want.
 
-    plt.ylabel('True Positive Rate')
-    plt.xlabel('False Positive Rate')
-    plt.title('ROC-Curve of ' + title)
+    Args:
+        mat: A matrix, which could be a np.ndarray or a scipy sparse matrix
+    """
 
-    plt.show()
+    # if mat is not np.ndarray, then convert it into np.ndarray
+    if type(mat).__module__ != np.__name__:
+        mat = mat.toarray()
+
+    mat_t = mat.transpose()
+    mat_mat_t = mat.dot(mat_t)
+
+    # sum up diagonal
+    variance = 0.0
+    for i in range(0, mat_mat_t.shape[0]):
+        variance += mat_mat_t[i, i]
+
+    return variance
 
 
 def main():
