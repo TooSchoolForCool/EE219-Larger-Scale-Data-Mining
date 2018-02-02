@@ -46,8 +46,8 @@ def tester_3():
     docs = DataLoader(category="8_class", mode="all")
 
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
-    svd = TruncatedSVD(n_components=10, random_state=13)
-    nmf = NMF(n_components=10, random_state=13)
+    svd = TruncatedSVD(n_components=1000, random_state=13)
+    nmf = NMF(n_components=1000, random_state=13)
 
     docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
@@ -110,11 +110,42 @@ def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
             msg="Contingency Matrix")
 
 
+# tester for task 4
+def tester_4():
+    docs = DataLoader(category="8_class", mode="test")
+    lsi_best_r, nmf_best_r = 10, 10
+
+    data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
+    svd = TruncatedSVD(n_components=lsi_best_r, random_state=13)
+    nmf = NMF(n_components=nmf_best_r, random_state=13)
+
+    docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
+    lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
+    nmf_docs_tfidf = nmf.fit_transform(docs_tfidf)
+
+    # renaming groud truth labels, since we treat 8 classes as only 2 classes
+    ground_truth = [label / 4 for label in docs.get_labels()]
+
+    tester_4_a(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r)
+    tester_4_a(nmf_docs_tfidf, "NMF with r = %d" % nmf_best_r)
+
+
+# tester for task 4 part(a)
+def tester_4_a(feature_vecs, title):
+    kmeans = kmeans = KMeans(n_clusters=2)
+
+    predicted_labels = kmeans.predict(feature_vecs)
+
+    utils.print_title(title)
+    utils.plot_cluster_result(feature_vecs, predicted_labels, title)
+
+
 # a list of function
 tester_functions = {
     "1" : tester_1,
     "2" : tester_2,
-    "3" : tester_3
+    "3" : tester_3,
+    "4" : tester_4
 }
 
 

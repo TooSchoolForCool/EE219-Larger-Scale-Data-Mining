@@ -1,4 +1,10 @@
 import numpy as np
+import matplotlib as mpl
+
+# Use Agg backend for supporing no-display environment
+mpl.use('Agg')
+
+import matplotlib.pyplot as plt
 
 
 def print_title(msg, length = 60):
@@ -44,6 +50,30 @@ def calc_mat_variance(mat):
         variance += mat_mat_t[i, i]
 
     return variance
+
+
+def plot_cluster_result(feature_vecs, labels, title):
+    """plot clustering result
+
+    Project high-dimensional vector into 2-dimensional plane by selecting
+    the most 2 siginicant feature components (the first 2 in LSI or NMF),
+    and coloring each data sample based on the given label.
+
+    Args:
+        feature_vecs: A feature vector matrix (a np.ndarray with shape 
+            (n_docs, n_features)), generated through LSI or NMF. each 
+            row represents a data sample, each column represents a feature.
+        labels: A list of labels, each label is an integer which represents
+            a class id. The i-th row in feature_vecs is associated with the
+            i-th label in the list.
+    """
+    # project each data sample into 2-dimensional space
+    data_points = feature_vecs[:, :2]
+    n_clusters = len( np.unique(labels) )
+
+    # generate color palette for marking different cluster with different color
+    palette = [i for i in "bgrcmyk"]
+
 
 
 def main():
