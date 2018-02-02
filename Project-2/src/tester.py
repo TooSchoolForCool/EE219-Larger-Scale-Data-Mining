@@ -23,7 +23,7 @@ def tester_2():
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
     kmeans = KMeans(n_clusters=2)
 
-    ground_truth = docs.get_labels()
+    ground_truth = [label / 4 for label in docs.get_labels()]
     docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
     predicted_labels = kmeans.predict(docs_tfidf)
 
@@ -31,10 +31,16 @@ def tester_2():
     evaluate.eval_report(ground_truth, predicted_labels)
 
 
+# tester for part 3
+def tester_3():
+    pass 
+
+
 # a list of function
 tester_functions = {
     "1" : tester_1,
-    "2" : tester_2
+    "2" : tester_2,
+    "3" : tester_3
 }
 
 

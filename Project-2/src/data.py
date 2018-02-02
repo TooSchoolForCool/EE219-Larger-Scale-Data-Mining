@@ -29,6 +29,7 @@ class DataLoader(object):
 
         Attributes:
             _dataset: sklearn dataset instance
+            _length: size of the dataset
     """
 
     def __init__(self, category="all", mode="all", rm_noise=True):
@@ -65,7 +66,7 @@ class DataLoader(object):
                 categories = category, shuffle=True, random_state=13, remove=remove_opt)
 
         # calculate size of dataset
-        self.length = len(self._dataset.data)
+        self._length = len(self._dataset.data)
 
 
     def get_data(self):
@@ -86,7 +87,7 @@ class DataLoader(object):
         Returns:
             The size of the dataset, which is a integer
         """
-        return self.length
+        return self._length
 
 
     def get_labels(self):
