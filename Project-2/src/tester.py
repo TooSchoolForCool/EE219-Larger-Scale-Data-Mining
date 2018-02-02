@@ -40,11 +40,11 @@ def tester_2():
 
 # tester for task 3
 def tester_3():
-    docs = DataLoader(category="8_class", mode="test")
+    docs = DataLoader(category="8_class", mode="all")
 
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
-    svd = TruncatedSVD(n_components=10, random_state=13)
-    nmf = NMF(n_components=10, random_state=13)
+    svd = TruncatedSVD(n_components=1000, random_state=13)
+    nmf = NMF(n_components=1000, random_state=13)
 
     docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
@@ -88,8 +88,7 @@ def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
 # tester for task 3 part(b)
 def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
     kmeans = KMeans(n_clusters=2)
-    # testcases = [1, 2, 3, 5, 10, 20, 50, 100, 300]
-    testcases = [1, 2, 3, 5]
+    testcases = [1, 2, 3, 5, 10, 20, 50, 100, 300]
 
     # test LSI
     for case in testcases:
