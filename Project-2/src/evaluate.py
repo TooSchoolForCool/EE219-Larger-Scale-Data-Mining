@@ -52,7 +52,7 @@ def contingency_matrix(ground_truth, predicted_labels, n_clusters, msg=""):
         mat_dict[(i, j)] += 1
 
     if msg != "":
-        print('-----%s-----' % msg)
+        print('%s' % msg)
 
     # print cluster_id title
     # cluster_0   cluster_1   cluster_2   ...

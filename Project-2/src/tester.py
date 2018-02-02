@@ -1,4 +1,7 @@
 import numpy as np
+import matplotlib as mpl
+
+mpl.use('Agg')
 
 import matplotlib.pyplot as plt
 from sklearn.decomposition import TruncatedSVD
@@ -43,8 +46,8 @@ def tester_3():
     docs = DataLoader(category="8_class", mode="all")
 
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
-    svd = TruncatedSVD(n_components=1000, random_state=13)
-    nmf = NMF(n_components=1000, random_state=13)
+    svd = TruncatedSVD(n_components=10, random_state=13)
+    nmf = NMF(n_components=10, random_state=13)
 
     docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
@@ -83,6 +86,8 @@ def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
     plt.xlabel("r")
     plt.ylabel("Ratio of Variance")
     plt.savefig('task_3_a.png')
+
+    print("Figure is saved at ./task_3_a.png")
 
 
 # tester for task 3 part(b)
