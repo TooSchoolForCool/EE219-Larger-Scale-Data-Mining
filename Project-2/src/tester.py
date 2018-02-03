@@ -107,8 +107,8 @@ def tester_3_b(tfidf, lsi_tfidf, ground_truth):
 
 # tester for task 4
 def tester_4():
-    docs = DataLoader(category="8_class", mode="test")
-    lsi_best_r, nmf_best_r = 10, 10
+    docs = DataLoader(category="8_class", mode="all")
+    lsi_best_r, nmf_best_r = 20, 10
 
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
     svd = TruncatedSVD(n_components=lsi_best_r, random_state=13)
@@ -122,12 +122,12 @@ def tester_4():
     ground_truth = [label / 4 for label in docs.get_labels()]
 
     # task 4 part(a)
-    utils.print_title("Task 3 part(a): Visulize Clustering Result")
+    utils.print_title("Task 4 part(a): Visulize Clustering Result")
     tester_4_a(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r)
     tester_4_a(nmf_docs_tfidf, "NMF with r = %d" % nmf_best_r)
 
     # task 4 part(b)
-    utils.print_title("Task 3 part(b): Normalization & non-linear transformation")
+    utils.print_title("Task 4 part(b): Normalization & non-linear transformation")
     tester_4_b(lsi_docs_tfidf, ground_truth, nonlinear_transform=False, title="LSI with r = %d" % lsi_best_r)
     tester_4_b(nmf_docs_tfidf, ground_truth, nonlinear_transform=True, title="NMF with r = %d" % lsi_best_r)
 
