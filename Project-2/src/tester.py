@@ -152,6 +152,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
     evaluate.eval_report(ground_truth, predicted_labels, "-----Original %s-----" % title)
     evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
         msg="Contingency Matrix")
+    utils.plot_cluster_result(feature_vecs, predicted_labels, "Original %s" % title)
 
     # evaluate normalization
     normalized_features = utils.normalize(feature_vecs)
@@ -159,6 +160,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
     evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization %s-----" % title)
     evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
         msg="Contingency Matrix")
+    utils.plot_cluster_result(normalized_features, predicted_labels, "Normalization %s" % title)
 
     if nonlinear_transform:
         # Non-linear transform (logarithm)
@@ -167,6 +169,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
         evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
+        utils.plot_cluster_result(log_features, predicted_labels, "Logarithm %s" % title)
 
         # Logarithm -> normalization
         log_normalized_features = utils.normalize(log_features)
@@ -174,6 +177,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
         evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm + Normalization %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
+        utils.plot_cluster_result(log_normalized_features, predicted_labels, "log_Normalize %s" % title)
 
         # normalization -> logarithm
         normalized_log_features = utils.log_transform(normalized_features)
@@ -181,6 +185,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
         evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization + Logarithm %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
+        utils.plot_cluster_result(normalized_log_features, predicted_labels, "Normalize_log %s" % title)
 
 
 # a list of function
