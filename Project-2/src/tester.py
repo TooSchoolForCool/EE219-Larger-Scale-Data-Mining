@@ -31,7 +31,7 @@ def tester_2():
     data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
     kmeans = KMeans(n_clusters=2)
 
-    # renaming groud truth labels, since we treat 8 classes as only 2 classes
+    # renaming ground truth labels, since we treat 8 classes as only 2 classes
     ground_truth = [label / 4 for label in docs.get_labels()]
 
     docs_tfidf = data_vectorizer.fit_transform(docs.get_data())
@@ -53,16 +53,18 @@ def tester_3():
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
     nmf_docs_tfidf = nmf.fit_transform(docs_tfidf)
 
-    # renaming groud truth labels, since we treat 8 classes as only 2 classes
+    # renaming ground truth labels, since we treat 8 classes as only 2 classes
     ground_truth = [label / 4 for label in docs.get_labels()]
 
     # start task 3 (part a)
     utils.print_title("Task 3 part(a): Plot ratio of variance")
-    tester_3_a(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf)
+    # tester_3_a(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf)
+    tester_3_a2(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf)
 
     # start task 3 (part b)
     utils.print_title("Task 3 part(b): Testing param for LSI & NMF")
-    tester_3_b(lsi_docs_tfidf, nmf_docs_tfidf, ground_truth)
+    # tester_3_b(lsi_docs_tfidf, nmf_docs_tfidf, ground_truth)
+    tester_3_b2(docs_tfidf, lsi_docs_tfidf, nmf_docs_tfidf, ground_truth)
 
 
 # tester for task 3 part(a)
@@ -90,6 +92,31 @@ def tester_3_a(tfidf, lsi_tfidf, nmf_tfidf):
     print("Figure is saved at ./task_3_a.png")
 
 
+# another approach to solve task 3 part(a)
+def tester_3_a2(tfidf, lsi_tfidf, nmf_tfidf):
+    tfidf_variance = utils.calc_mat_variance(tfidf)
+
+    dimension = lsi_tfidf.shape[1]
+
+    lsi_variances = [utils.calc_mat_variance(lsi_tfidf[:, :i]) for i in range(1, dimension + 1)]
+    nmf_variances = [utils.calc_mat_variance(NMF(n_components=i, random_state=13).fit_transform(tfidf)) for i in range(1, dimension + 1)]
+
+    lsi_raitos = [var / tfidf_variance for var in lsi_variances]
+    nmf_raitos = [var / tfidf_variance for var in nmf_variances]
+
+    # create x-axis
+    r = [i + 1 for i in range(0, dimension)]
+    
+    plt.plot(r, lsi_raitos, "r", r, nmf_raitos, "b")
+    plt.legend(("LSI", "NMF"), loc=0)
+    plt.title('[LSI & NMF] The ratio of variance the top %d principle components' % dimension)
+    plt.xlabel("r")
+    plt.ylabel("Ratio of Variance")
+    plt.savefig('task_3_a2.png')
+
+    print("Figure is saved at ./task_3_a2.png")
+
+
 # tester for task 3 part(b)
 def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
     kmeans = KMeans(n_clusters=2)
@@ -110,6 +137,27 @@ def tester_3_b(lsi_tfidf, nmf_tfidf, ground_truth):
             msg="Contingency Matrix")
 
 
+# another approach to solve task 3 part(b)
+def tester_3_b2(tfidf, lsi_tfidf, nmf_tfidf, ground_truth):
+    kmeans = KMeans(n_clusters=2)
+    testcases = [1, 2, 3, 5, 10, 20, 50, 100, 300]
+
+    # test LSI
+    for case in testcases:
+        predicted_labels = kmeans.predict(lsi_tfidf[:, :case])
+        evaluate.eval_report(ground_truth, predicted_labels, "-----[LSI] r = %d-----" % case)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="Contingency Matrix")
+
+    # test NMF
+    for case in testcases:
+        nmf_k_tfidf = NMF(n_components=case, random_state=13).fit_transform(tfidf)
+        predicted_labels = kmeans.predict(nmf_k_tfidf)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----[NMF] r = %d-----" % case)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="Contingency Matrix")
+
+
 # tester for task 4
 def tester_4():
     docs = DataLoader(category="8_class", mode="test")
@@ -123,7 +171,7 @@ def tester_4():
     lsi_docs_tfidf = svd.fit_transform(docs_tfidf)
     nmf_docs_tfidf = nmf.fit_transform(docs_tfidf)
 
-    # renaming groud truth labels, since we treat 8 classes as only 2 classes
+    # renaming ground truth labels, since we treat 8 classes as only 2 classes
     ground_truth = [label / 4 for label in docs.get_labels()]
 
     # task 4 part(a)
