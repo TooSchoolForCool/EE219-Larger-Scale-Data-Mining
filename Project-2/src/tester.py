@@ -129,7 +129,7 @@ def tester_4():
     # task 4 part(b)
     utils.print_title("Task 4 part(b): Normalization & non-linear transformation")
     tester_4_b(lsi_docs_tfidf, ground_truth, nonlinear_transform=False, title="LSI with r = %d" % lsi_best_r)
-    tester_4_b(nmf_docs_tfidf, ground_truth, nonlinear_transform=True, title="NMF with r = %d" % lsi_best_r)
+    tester_4_b(nmf_docs_tfidf, ground_truth, nonlinear_transform=True, title="NMF with r = %d" % nmf_best_r)
 
 
 # tester for task 4 part(a)
