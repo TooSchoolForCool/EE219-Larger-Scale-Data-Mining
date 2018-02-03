@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import matplotlib as mpl
 
@@ -101,6 +103,49 @@ def plot_cluster_result(feature_vecs, labels, title):
     plt.savefig(title + ".png", dpi=512)
 
     print("Figure is save at ./%s" % (title + ".png"))
+
+
+def normalize(feature_vecs):
+    """normalize feature vectors
+
+    Normalizing features, s.t. each feature has unit variance.
+
+    Args:
+        feature_vecs: A feature vector matrix (a np.ndarray with shape 
+            (n_docs, n_features)). Each row represents a data sample,
+            each column represents a feature.
+    """
+    # calculate standard ariance on each column
+    col_var = np.var(feature_vecs, axis=0)
+    col_std_var = [math.sqrt(var) for var in col_var]
+    
+    # deep copy
+    unit_var_features = np.array(feature_vecs)
+
+    for i in range(0, unit_var_features.shape[1]):
+        unit_var_features[:, i] = unit_var_features[:, i] / col_std_var[i]
+
+    return unit_var_features
+
+
+def log_transform(feature_vecs):
+    """Apply logarithm to each feature
+
+    A nonlinear transformation, apply logarithm on each feature
+
+    Args:
+        feature_vecs: A feature vector matrix (a np.ndarray with shape 
+            (n_docs, n_features)). Each row represents a data sample,
+            each column represents a feature.
+    """
+    # deep copy
+    log_feature = np.array(feature_vecs)
+
+    vectorizer = np.vectorize(lambda x : math.log(x + 1e-5, 2))
+    
+    log_feature = vectorizer(log_feature)
+
+    return log_feature
 
 
 def main():

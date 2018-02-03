@@ -122,11 +122,14 @@ def tester_4():
     ground_truth = [label / 4 for label in docs.get_labels()]
 
     # task 4 part(a)
+    utils.print_title("Task 3 part(a): Visulize Clustering Result")
     tester_4_a(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r)
     tester_4_a(nmf_docs_tfidf, "NMF with r = %d" % nmf_best_r)
 
     # task 4 part(b)
-    tester_4_b(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r, nonlinear_transform=False)
+    utils.print_title("Task 3 part(b): Normalization & non-linear transformation")
+    tester_4_b(lsi_docs_tfidf, ground_truth, nonlinear_transform=False, title="LSI with r = %d" % lsi_best_r)
+    tester_4_b(nmf_docs_tfidf, ground_truth, nonlinear_transform=True, title="NMF with r = %d" % lsi_best_r)
 
 
 # tester for task 4 part(a)
@@ -135,14 +138,49 @@ def tester_4_a(feature_vecs, title):
 
     predicted_labels = kmeans.predict(feature_vecs)
 
-    utils.print_title(title)
+    print("-----%s-----" % title)
     utils.plot_cluster_result(feature_vecs, predicted_labels, title)
 
 
 # tester for task 4 part(b)
-def tester_4_b(feature_vecs, title, nonlinear_transform=False):
-    for item in feature_vecs[0]:
-        print(item)
+def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
+    kmeans = KMeans(n_clusters=2)
+
+    # original result
+    # evaluate normalization
+    predicted_labels = kmeans.predict(feature_vecs)
+    evaluate.eval_report(ground_truth, predicted_labels, "-----Original %s-----" % title)
+    evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+        msg="Contingency Matrix")
+
+    # evaluate normalization
+    normalized_features = utils.normalize(feature_vecs)
+    predicted_labels = kmeans.predict(normalized_features)
+    evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization %s-----" % title)
+    evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+        msg="Contingency Matrix")
+
+    if nonlinear_transform:
+        # Non-linear transform (logarithm)
+        log_features = utils.log_transform(feature_vecs)
+        predicted_labels = kmeans.predict(log_features)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm %s-----" % title)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="Contingency Matrix")
+
+        # Logarithm -> normalization
+        log_normalized_features = utils.normalize(log_features)
+        predicted_labels = kmeans.predict(log_normalized_features)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm + Normalization %s-----" % title)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="Contingency Matrix")
+
+        # normalization -> logarithm
+        normalized_log_features = utils.log_transform(normalized_features)
+        predicted_labels = kmeans.predict(normalized_log_features)
+        evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization + Logarithm %s-----" % title)
+        evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
+            msg="Contingency Matrix")
 
 
 # a list of function
