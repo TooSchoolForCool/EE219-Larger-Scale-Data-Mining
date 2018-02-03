@@ -78,7 +78,7 @@ def plot_cluster_result(feature_vecs, labels, title):
     n_clusters = len( np.unique(labels) )
 
     # generate color palette for marking different clusters with different color
-    palette = [i for i in "bgrcmyk"]
+    palette = [i for i in "rgbcmyk"]
     # generate marker list, for different clusters we adopt different markers
     markers = [i for i in "o<.^"]
 
@@ -99,7 +99,7 @@ def plot_cluster_result(feature_vecs, labels, title):
     plt.title(title)
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.legend(clusters, ('Cluster #' + str(i) for x in range(1, n_clusters + 1)), loc=1)
+    plt.legend(clusters, ('Cluster #' + str(i) for i in range(1, n_clusters + 1)), loc=1)
     plt.savefig(title + ".png", dpi=512)
 
     print("Figure is save at ./%s" % (title + ".png"))

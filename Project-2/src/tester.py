@@ -144,11 +144,8 @@ def tester_4_a(feature_vecs, title):
 
 # tester for task 4 part(b)
 def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
-    kmeans = KMeans(n_clusters=2)
-
     # original result
-    # evaluate normalization
-    predicted_labels = kmeans.predict(feature_vecs)
+    predicted_labels = KMeans(n_clusters=2).predict(feature_vecs)
     evaluate.eval_report(ground_truth, predicted_labels, "-----Original %s-----" % title)
     evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
         msg="Contingency Matrix")
@@ -156,7 +153,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
 
     # evaluate normalization
     normalized_features = utils.normalize(feature_vecs)
-    predicted_labels = kmeans.predict(normalized_features)
+    predicted_labels = KMeans(n_clusters=2).predict(normalized_features)
     evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization %s-----" % title)
     evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
         msg="Contingency Matrix")
@@ -165,7 +162,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
     if nonlinear_transform:
         # Non-linear transform (logarithm)
         log_features = utils.log_transform(feature_vecs)
-        predicted_labels = kmeans.predict(log_features)
+        predicted_labels = KMeans(n_clusters=2).predict(log_features)
         evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
@@ -173,7 +170,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
 
         # Logarithm -> normalization
         log_normalized_features = utils.normalize(log_features)
-        predicted_labels = kmeans.predict(log_normalized_features)
+        predicted_labels = KMeans(n_clusters=2).predict(log_normalized_features)
         evaluate.eval_report(ground_truth, predicted_labels, "-----Logarithm + Normalization %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
@@ -181,7 +178,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
 
         # normalization -> logarithm
         normalized_log_features = utils.log_transform(normalized_features)
-        predicted_labels = kmeans.predict(normalized_log_features)
+        predicted_labels = KMeans(n_clusters=2).predict(normalized_log_features)
         evaluate.eval_report(ground_truth, predicted_labels, "-----Normalization + Logarithm %s-----" % title)
         evaluate.contingency_matrix(ground_truth, predicted_labels, n_clusters=2, 
             msg="Contingency Matrix")
