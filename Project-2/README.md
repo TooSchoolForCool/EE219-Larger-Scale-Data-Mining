@@ -15,6 +15,11 @@ This repo is for "EE219 Larger Scale Data Mining" course projects at [UCLA](http
 
 ## Project Description
 
+1. Building the TD-IDF
+2. 2-class Clustering
+3. Preprocess the data
+4. Normalization & Non-linear Transform
+5. Multi-class Clustering
 
 
 
@@ -34,9 +39,9 @@ sh ./install.sh
 
 ## How to Run?
 
-Open your terminal, get into the`src `directory where we placed our source code. Try following command to run `task a`, if you want to execute other task, just change `a` to the corresponding task. For example, if you want to try `task j` just change it to `--task j`. (Note: only `a to j`  are supported)
+Open your terminal, get into the`src `directory where we placed our source code. Try following command to run `task 1`, if you want to execute other task, just change `1` to the corresponding task. For example, if you want to try `task 2` just change it to `--task 2`. (Note: only `1 to 5`  are supported)
 
 ```bash
-python main.py --task a
+python main.py --task 1
 ```
 
