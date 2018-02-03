@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib as mpl
 
+from sklearn.decomposition import PCA
+
 # Use Agg backend for supporing no-display environment
 mpl.use('Agg')
 
@@ -66,14 +68,39 @@ def plot_cluster_result(feature_vecs, labels, title):
         labels: A list of labels, each label is an integer which represents
             a class id. The i-th row in feature_vecs is associated with the
             i-th label in the list.
+        title: [string] title of the figure and saving file name
     """
     # project each data sample into 2-dimensional space
-    data_points = feature_vecs[:, :2]
+    data_points = PCA(n_components=2).fit_transform(feature_vecs)
+    # calculate number of clusters
     n_clusters = len( np.unique(labels) )
 
-    # generate color palette for marking different cluster with different color
+    # generate color palette for marking different clusters with different color
     palette = [i for i in "bgrcmyk"]
+    # generate marker list, for different clusters we adopt different markers
+    markers = [i for i in "o<.^"]
 
+    clusters_x = [[] for i in range(n_clusters)]
+    clusters_y = [[] for i in range(n_clusters)]
+    clusters = [0 for i in range(n_clusters)]
+
+    # assign each data point to its predicted cluster
+    for point, label in zip(data_points, labels):
+        clusters_x[label].append(point[0])
+        clusters_y[label].append(point[1])
+
+    # Plot scatter figure
+    for i in range(n_clusters):
+        clusters[i] = plt.scatter(clusters_x[i], clusters_y[i], s=3,
+            c=palette[i % len(palette)], marker=markers[i % len(markers)])
+
+    plt.title(title)
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend(clusters, ('Cluster #' + str(i) for x in range(1, n_clusters + 1)), loc=1)
+    plt.savefig(title + ".png", dpi=512)
+
+    print("Figure is save at ./%s" % (title + ".png"))
 
 
 def main():

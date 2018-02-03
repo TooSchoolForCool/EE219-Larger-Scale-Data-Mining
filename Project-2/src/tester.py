@@ -126,8 +126,12 @@ def tester_4():
     # renaming groud truth labels, since we treat 8 classes as only 2 classes
     ground_truth = [label / 4 for label in docs.get_labels()]
 
+    # task 4 part(a)
     tester_4_a(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r)
     tester_4_a(nmf_docs_tfidf, "NMF with r = %d" % nmf_best_r)
+
+    # task 4 part(b)
+    tester_4_b(lsi_docs_tfidf, "LSI with r = %d" % lsi_best_r, nonlinear_transform=False)
 
 
 # tester for task 4 part(a)
@@ -138,6 +142,12 @@ def tester_4_a(feature_vecs, title):
 
     utils.print_title(title)
     utils.plot_cluster_result(feature_vecs, predicted_labels, title)
+
+
+# tester for task 4 part(b)
+def tester_4_b(feature_vecs, title, nonlinear_transform=False):
+    for item in feature_vecs[0]:
+        print(item)
 
 
 # a list of function
