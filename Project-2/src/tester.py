@@ -184,11 +184,10 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
             msg="Contingency Matrix")
         utils.plot_cluster_result(normalized_log_features, predicted_labels, "Normalize_log %s" % title)
 
-<<<<<<< HEAD
+
 # tester for task 5
 def tester_5():
     # docs = DataLoader(category="all", mode="all")
-    
 
     # data_vectorizer = DataVectorizer(min_df=3, rm_stopword=True)
     # svd = TruncatedSVD(n_components=1000, random_state=13)
@@ -202,7 +201,6 @@ def tester_5():
     # ground_truth = docs.get_labels()
 
     # # (part a)
-
 
     # utils.print_title("Task 5 part(a): Testing param for LSI & NMF")
     # kmeans = KMeans(n_clusters=20)
