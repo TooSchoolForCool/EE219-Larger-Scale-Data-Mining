@@ -1,0 +1,87 @@
+************************************************************
+* Task 4 part(a): Visulize Clustering Result
+************************************************************
+-----LSI with r = 20-----
+Figure is save at ./LSI with r = 20.png
+-----NMF with r = 10-----
+Figure is save at ./NMF with r = 10.png
+************************************************************
+* Task 4 part(b): Normalization & non-linear transformation
+************************************************************
+-----Original LSI with r = 20-----
+Homogeneity	0.4025
+Completeness	0.4480
+V-measure	0.4240
+Adjusted Rand	0.3937
+Adjusted Mutual	0.4024
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   2457       1446       
+class_1	   22         3957       
+Figure is save at ./Original LSI with r = 20.png
+-----Normalization LSI with r = 20-----
+Homogeneity	0.3483
+Completeness	0.4069
+V-measure	0.3754
+Adjusted Rand	0.3167
+Adjusted Mutual	0.3483
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   2195       1708       
+class_1	   15         3964       
+Figure is save at ./Normalization LSI with r = 20.png
+-----Original NMF with r = 10-----
+Homogeneity	0.4145
+Completeness	0.4375
+V-measure	0.4257
+Adjusted Rand	0.4600
+Adjusted Mutual	0.4144
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   2758       1145       
+class_1	   123        3856       
+Figure is save at ./Original NMF with r = 10.png
+-----Normalization NMF with r = 10-----
+Homogeneity	0.4740
+Completeness	0.4943
+V-measure	0.4840
+Adjusted Rand	0.5259
+Adjusted Mutual	0.4740
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   2912       991        
+class_1	   92         3887       
+Figure is save at ./Normalization NMF with r = 10.png
+-----Logarithm NMF with r = 10-----
+Homogeneity	0.1871
+Completeness	0.1899
+V-measure	0.1885
+Adjusted Rand	0.2397
+Adjusted Mutual	0.1870
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   3203       700        
+class_1	   1311       2668       
+Figure is save at ./Logarithm NMF with r = 10.png
+-----Logarithm + Normalization NMF with r = 10-----
+Homogeneity	0.2043
+Completeness	0.2054
+V-measure	0.2048
+Adjusted Rand	0.2658
+Adjusted Mutual	0.2042
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   3140       763        
+class_1	   1146       2833       
+Figure is save at ./log_Normalize NMF with r = 10.png
+-----Normalization + Logarithm NMF with r = 10-----
+Homogeneity	0.0818
+Completeness	0.0833
+V-measure	0.0825
+Adjusted Rand	0.1072
+Adjusted Mutual	0.0817
+Contingency Matrix
+           cluster_0  cluster_1  
+class_0	   1001       2902       
+class_1	   2330       1649       
+Figure is save at ./Normalize_log NMF with r = 10.png
