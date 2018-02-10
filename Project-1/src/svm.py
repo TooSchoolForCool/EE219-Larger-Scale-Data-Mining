@@ -23,7 +23,7 @@ class SVM(object):
         elif model_type == 'multy1':
             self.svm_model_ = svm.SVC(decision_function_shape='ovo')
         elif model_type == 'multy2':
-            self.svm_model_ = svm.SVC(decision_function_shape='ovr')
+            self.svm_model_ = svm.NuSVC(decision_function_shape='ovr')
            
         # self.svm_model_ = svm.SVC(kernel='rbf', C=penalty)
 

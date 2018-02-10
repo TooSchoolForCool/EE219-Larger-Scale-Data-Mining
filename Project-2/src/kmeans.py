@@ -16,7 +16,11 @@ class KMeans(object):
         Args:
             n_clusters: number of clusters want to find
         """
+<<<<<<< HEAD
         self._kmeans = SklearnKMeans(n_clusters=n_clusters, max_iter=max_iter, random_state=13, n_init=30)
+=======
+        self._kmeans = SklearnKMeans(n_clusters=n_clusters, max_iter=max_iter, random_state=13)
+>>>>>>> f4b89e479f2ab20b42e27a4f9d79ff8332d1a617
 
     def predict(self, data_points):
         """predict

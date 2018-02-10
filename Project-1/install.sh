@@ -1,3 +1,3 @@
-pip install -r requirements.txt
+pip2 install -r requirements.txt
 
-python nltk_download.py
+python2 nltk_download.py

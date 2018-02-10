@@ -184,6 +184,7 @@ def tester_4_b(feature_vecs, ground_truth, nonlinear_transform=False, title=""):
             msg="Contingency Matrix")
         utils.plot_cluster_result(normalized_log_features, predicted_labels, "Normalize_log %s" % title)
 
+<<<<<<< HEAD
 # tester for task 5
 def tester_5():
     # docs = DataLoader(category="all", mode="all")
@@ -305,14 +306,20 @@ def tester_5():
         msg="Contingency Matrix")
     utils.plot_cluster_result(normalized_log_features, predicted_labels, "Normalize_log %s" % "NMF with r = %d" % nmf_best_r)
 
+=======
+>>>>>>> f4b89e479f2ab20b42e27a4f9d79ff8332d1a617
 
 # a list of function
 tester_functions = {
     "1" : tester_1,
     "2" : tester_2,
     "3" : tester_3,
+<<<<<<< HEAD
     "4" : tester_4,
     "5" : tester_5
+=======
+    "4" : tester_4
+>>>>>>> f4b89e479f2ab20b42e27a4f9d79ff8332d1a617
 }
 
 
