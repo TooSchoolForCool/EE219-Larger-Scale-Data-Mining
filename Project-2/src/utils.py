@@ -73,10 +73,6 @@ def plot_cluster_result(feature_vecs, labels, title):
         title: [string] title of the figure and saving file name
     """
     # project each data sample into 2-dimensional space
-<<<<<<< HEAD
-    
-=======
->>>>>>> f4b89e479f2ab20b42e27a4f9d79ff8332d1a617
     data_points = PCA(n_components=2).fit_transform(feature_vecs)
     # calculate number of clusters
     n_clusters = len( np.unique(labels) )
