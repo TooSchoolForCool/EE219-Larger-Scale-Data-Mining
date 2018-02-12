@@ -1,6 +1,3 @@
-************************************************************
-* Task 5 part(c): Normalization & non-linear transformation
-************************************************************
 -----Original LSI with r = 20-----
 Homogeneity	0.2812
 Completeness	0.3373
@@ -29,7 +26,6 @@ class_16	  2          0          0          0          70         2          3  
 class_17	  0          0          0          167        36         282        3          0          5          0          120        0          0          0          269        0          4          0          18         36         
 class_18	  2          0          1          0          92         1          0          1          1          0          188        0          0          1          274        0          7          0          12         195        
 class_19	  2          0          0          0          33         4          0          0          93         1          201        2          0          2          216        0          4          0          12         58         
------Original NMF with r = 10-----
 -----[NMF] r = 10-----
 Homogeneity	0.0920
 Completeness	0.1499
@@ -86,7 +82,6 @@ class_16	  1          3          257        10         5          3          1  
 class_17	  0          5          295        7          4          1          0          0          98         165        0          19         0          0          1          0          3          275        20         47         
 class_18	  0          1          283        50         5          0          1          0          197        0          0          18         0          1          0          2          0          1          158        58         
 class_19	  0          90         236        2          3          1          2          2          169        0          0          14         0          0          0          2          0          5          57         45         
-Figure is save at ./Normalization LSI with r = 20.png
 -----Normalization NMF with r = 10-----
 Homogeneity	0.2643
 Completeness	0.3097
@@ -115,7 +110,6 @@ class_16	  16         2          1          196        1          180        94 
 class_17	  8          1          0          167        2          305        32         3          0          0          0          0          0          0          1          0          408        4          7          2          
 class_18	  11         4          0          191        0          120        86         1          0          0          0          0          3          1          5          0          335        14         4          0          
 class_19	  12         3          0          197        55         36         62         0          2          0          0          0          0          1          2          0          147        7          103        1          
-Figure is save at ./Normalization NMF with r = 10.png
 -----Logarithm NMF with r = 10-----
 Homogeneity	0.1804
 Completeness	0.1817
@@ -144,7 +138,6 @@ class_16	  49         0          41         92         80         22         5  
 class_17	  52         0          23         101        37         22         0          40         25         1          17         1          38         97         53         318        45         65         2          3          
 class_18	  56         0          44         73         76         16         1          83         25         6          35         1          25         51         51         90         101        35         0          6          
 class_19	  96         1          27         65         38         10         2          22         26         10         23         1          12         11         102        22         40         117        1          2          
-Figure is save at ./Logarithm NMF with r = 10.png
 -----Logarithm + Normalization NMF with r = 10-----
 Homogeneity	0.1966
 Completeness	0.1977
@@ -173,7 +166,6 @@ class_16	  1          52         2          5          52         128        3  
 class_17	  2          74         5          1          55         151        5          7          27         1          22         29         26         3          38         4          45         76         314        55         
 class_18	  1          65         3          1          74         82         6          15         60         2          46         28         28         6          24         7          58         44         93         132        
 class_19	  0          112        1          2          88         20         9          9          59         5          19         3          27         2          6          5          98         120        21         22         
-Figure is save at ./log_Normalize NMF with r = 10.png
 -----Normalization + Logarithm NMF with r = 10-----
 Homogeneity	0.1362
 Completeness	0.1369
@@ -202,5 +194,4 @@ class_16	  29         59         1          65         2          85         23 
 class_17	  25         84         1          35         5          70         22         3          42         40         21         2          64         26         308        11         2          0          82         97         
 class_18	  26         54         0          48         5          64         29         3          56         52         44         1          74         57         100        6          2          0          75         79         
 class_19	  61         61         1          38         14         59         24         3          34         48         35         3          29         24         58         7          12         1          37         79         
-Figure is save at ./Normalize_log NMF with r = 10.png
 
