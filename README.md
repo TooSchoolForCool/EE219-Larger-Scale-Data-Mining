@@ -16,6 +16,5 @@ This repo is for "EE219 Larger Scale Data Mining" course projects at [UCLA](http
 Brief Project Description:
 
 - Project 1: Classification Analysis on Textual Data
-
-
+- Project 2: Clustering
 
