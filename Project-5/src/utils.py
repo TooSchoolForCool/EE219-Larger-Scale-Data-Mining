@@ -36,3 +36,22 @@ def plot_hist(data, title):
     plt.title(title)
 
     plt.savefig("../figures/" + title + ".png", dpi=720)
+
+
+def extract_features(dataset):
+    features = []
+
+    for tweets_set in dataset:
+        n_tweets = len(tweets_set)
+
+        n_retweets, n_followers, max_followers = 0, 0, 0
+        for tweet in tweets_set:
+            n_retweets += tweet["n_retweets"]
+            n_followers += tweet["n_followers"]
+            max_followers = max(tweet["n_followers"], max_followers)
+
+        day_time = 0 if len(tweets_set) == 0 else tweets_set[0]["date"].hour
+
+        features.append([n_tweets, n_retweets, n_followers, max_followers, day_time])
+
+    return features
