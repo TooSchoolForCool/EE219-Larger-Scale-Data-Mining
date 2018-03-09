@@ -58,7 +58,7 @@ def task_1_2():
 
 
 def task_1_3():
-    for hash_tag in HASH_TAGS[]:
+    for hash_tag in HASH_TAGS:
         print('*' * 25, hash_tag, '*' * 25)
 
         file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
@@ -76,7 +76,74 @@ def task_1_3():
 
 
 def task_1_4():
-    pass
+    total_split_x = [[], [], []]
+    total_split_y = [[], [], []]
+    total_ave_errors = []
+    info = [
+        "Before Feb. 1, 8:00 a.m.", 
+        "Between Feb. 1, 8:00 a.m. and 8:00 p.m.",
+        "After Feb. 1, 8:00 p.m."
+    ]
+
+    kf = KFold(n_splits=10)
+
+    for hash_tag in HASH_TAGS:
+        file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
+        data_loader = DataLoader(file_path)
+        tweets_data = data_loader.get_split_data()
+
+        features = np.array(utils.extract_features(tweets_data, 1))
+
+        split_x = [features[:439, 1:6], features[440:451, 1:6], features[452:-1, 1:6]]
+        split_y = [features[1:440, 0], features[441:452, 0], features[453:, 0]]
+        
+        for i in range(3):
+            total_split_x[i] += list(split_x[i])
+            total_split_y[i] += list(split_y[i])
+
+        ave_error = []
+        for x, y, msg in zip(split_x, split_y, info):
+            total_error = 0.0
+
+            for train_idx, test_idx in kf.split(x):
+                train_x, test_x = x[train_idx], x[test_idx]
+                train_y, test_y = y[train_idx], y[test_idx]
+
+                model = sm.OLS(train_y, train_x)
+                fitted_model = model.fit()
+                predicted_y = fitted_model.predict(test_x)
+
+                error = utils.calc_error(test_y, predicted_y)
+                total_error += error
+
+            ave_error.append(total_error / 10)
+            print("[%s] (%s) average error: %.3lf" % (hash_tag, msg, total_error / 10))
+
+        total_ave_errors.append(ave_error)
+
+    print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
+    for hash_tag, ave in zip(HASH_TAGS, total_ave_errors):
+        print("%s\t%.3lf\t%.3lf\t%.3lf" % (hash_tag, ave[0], ave[1], ave[2]))
+
+    total_split_x = [np.array(x) for x in total_split_x]
+    total_split_y = [np.array(y) for y in total_split_y]
+
+    for x, y, msg in zip(total_split_x, total_split_y, info):
+        total_error = 0.0
+
+        for train_idx, test_idx in kf.split(x):
+            train_x, test_x = x[train_idx], x[test_idx]
+            train_y, test_y = y[train_idx], y[test_idx]
+
+            model = sm.OLS(train_y, train_x)
+            fitted_model = model.fit()
+            predicted_y = fitted_model.predict(test_x)
+
+            error = utils.calc_error(test_y, predicted_y)
+            total_error += error
+
+        ave_error.append(total_error / 10)
+        print("[%s] (%s) average error: %.3lf" % ("COMBINED", msg, total_error / 10))
 
 
 # a list of function

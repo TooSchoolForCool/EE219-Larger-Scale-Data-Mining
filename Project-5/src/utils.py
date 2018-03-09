@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import math
 
 def calc_sum(dataset, key):
     """calculate totle number of a specific attribute
@@ -76,6 +77,13 @@ def extract_features_1(dataset):
 
     return features
 
+def calc_error(test_y, predicted_y):
+    error = 0.0
+
+    for t, p in zip(test_y, predicted_y):
+        error += abs(t - p)
+
+    return error
 
 def extract_features(dataset, type):
     if type == 0:
