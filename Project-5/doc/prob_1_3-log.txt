@@ -1,0 +1,186 @@
+************************* gohawks *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.587
+Model:                            OLS   Adj. R-squared:                  0.584
+Method:                 Least Squares   F-statistic:                     163.0
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          1.31e-107
+Time:                        00:46:12   Log-Likelihood:                -4739.8
+No. Observations:                 578   AIC:                             9490.
+Df Residuals:                     573   BIC:                             9511.
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1            -0.0262      0.026     -1.006      0.315      -0.077       0.025
+x2             0.0027      0.000     11.106      0.000       0.002       0.003
+x3            -0.2081      0.040     -5.167      0.000      -0.287      -0.129
+x4            -0.5435      3.884     -0.140      0.889      -8.172       7.085
+x5            -0.0001   4.07e-05     -3.260      0.001      -0.000   -5.27e-05
+==============================================================================
+Omnibus:                     1090.638   Durbin-Watson:                   1.985
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          1368225.469
+Skew:                          12.552   Prob(JB):                         0.00
+Kurtosis:                     240.027   Cond. No.                     3.29e+05
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 3.29e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+************************* gopatriots *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.694
+Model:                            OLS   Adj. R-squared:                  0.692
+Method:                 Least Squares   F-statistic:                     258.7
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          6.56e-144
+Time:                        00:46:12   Log-Likelihood:                -3770.0
+No. Observations:                 574   AIC:                             7550.
+Df Residuals:                     569   BIC:                             7572.
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1           -21.3333      1.659    -12.857      0.000     -24.592     -18.074
+x2             0.0008      0.000      2.180      0.030    8.15e-05       0.002
+x3             0.1546      0.044      3.543      0.000       0.069       0.240
+x4           -22.2900      7.791     -2.861      0.004     -37.592      -6.988
+x5         -1.883e-05   4.92e-05     -0.383      0.702      -0.000    7.78e-05
+==============================================================================
+Omnibus:                      701.705   Durbin-Watson:                   2.045
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           220262.672
+Skew:                           5.432   Prob(JB):                         0.00
+Kurtosis:                      98.350   Cond. No.                     4.88e+05
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 4.88e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+************************* nfl *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.751
+Model:                            OLS   Adj. R-squared:                  0.749
+Method:                 Least Squares   F-statistic:                     350.7
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          8.20e-173
+Time:                        00:46:14   Log-Likelihood:                -4463.3
+No. Observations:                 586   AIC:                             8937.
+Df Residuals:                     581   BIC:                             8958.
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1            -2.5195      0.160    -15.722      0.000      -2.834      -2.205
+x2            -0.0001      0.000     -1.022      0.307      -0.000       0.000
+x3             0.2689      0.030      8.823      0.000       0.209       0.329
+x4            -8.0972      2.189     -3.698      0.000     -12.397      -3.797
+x5          2.266e-05   1.23e-05      1.843      0.066   -1.49e-06    4.68e-05
+==============================================================================
+Omnibus:                      839.542   Durbin-Watson:                   2.369
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           298004.291
+Skew:                           7.419   Prob(JB):                         0.00
+Kurtosis:                     112.475   Cond. No.                     5.24e+05
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 5.24e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+************************* patriots *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.729
+Model:                            OLS   Adj. R-squared:                  0.726
+Method:                 Least Squares   F-statistic:                     312.1
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          6.01e-162
+Time:                        00:46:19   Log-Likelihood:                -5372.7
+No. Observations:                 586   AIC:                         1.076e+04
+Df Residuals:                     581   BIC:                         1.078e+04
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1            -0.1112      0.199     -0.559      0.576      -0.502       0.280
+x2            -0.0015      0.000     -6.621      0.000      -0.002      -0.001
+x3             0.3135      0.019     16.559      0.000       0.276       0.351
+x4            -7.7581      4.648     -1.669      0.096     -16.888       1.372
+x5             0.0003   3.98e-05      6.828      0.000       0.000       0.000
+==============================================================================
+Omnibus:                     1084.130   Durbin-Watson:                   1.821
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          1211629.738
+Skew:                          12.090   Prob(JB):                         0.00
+Kurtosis:                     224.446   Cond. No.                     4.59e+05
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 4.59e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+************************* sb49 *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.840
+Model:                            OLS   Adj. R-squared:                  0.839
+Method:                 Least Squares   F-statistic:                     605.6
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          7.77e-227
+Time:                        00:46:27   Log-Likelihood:                -5661.2
+No. Observations:                 582   AIC:                         1.133e+04
+Df Residuals:                     577   BIC:                         1.135e+04
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1            -0.1778      0.084     -2.113      0.035      -0.343      -0.013
+x2            -0.0014      0.000     -3.563      0.000      -0.002      -0.001
+x3             0.3499      0.033     10.535      0.000       0.285       0.415
+x4            -3.3058      6.179     -0.535      0.593     -15.443       8.831
+x5          5.482e-05   1.62e-05      3.389      0.001     2.3e-05    8.66e-05
+==============================================================================
+Omnibus:                     1031.462   Durbin-Watson:                   1.390
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           911360.151
+Skew:                          11.087   Prob(JB):                         0.00
+Kurtosis:                     195.588   Cond. No.                     3.11e+06
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 3.11e+06. This might indicate that there are
+strong multicollinearity or other numerical problems.
+************************* superbowl *************************
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.844
+Method:                 Least Squares   F-statistic:                     633.4
+Date:                Fri, 09 Mar 2018   Prob (F-statistic):          3.12e-232
+Time:                        00:46:41   Log-Likelihood:                -6017.0
+No. Observations:                 585   AIC:                         1.204e+04
+Df Residuals:                     580   BIC:                         1.207e+04
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+x1            -1.3029      0.260     -5.019      0.000      -1.813      -0.793
+x2         -5.279e-05      0.000     -0.125      0.900      -0.001       0.001
+x3             0.3889      0.076      5.141      0.000       0.240       0.537
+x4             0.8270      3.472      0.238      0.812      -5.992       7.646
+x5            -0.0001   1.55e-05     -7.010      0.000      -0.000   -7.82e-05
+==============================================================================
+Omnibus:                     1168.570   Durbin-Watson:                   1.683
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          2259905.807
+Skew:                          14.091   Prob(JB):                         0.00
+Kurtosis:                     306.183   Cond. No.                     1.42e+06
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.42e+06. This might indicate that there are
+strong multicollinearity or other numerical problems.

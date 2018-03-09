@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.model_selection import KFold
 import statsmodels.api as sm
 
 import utils
@@ -46,7 +47,7 @@ def task_1_2():
         data_loader = DataLoader(file_path)
         tweets_data = data_loader.get_split_data()
 
-        features = np.array(utils.extract_features(tweets_data))
+        features = np.array(utils.extract_features(tweets_data, 0))
         x = features[:-1, 0:5]
         y = features[1:, 0]
 
@@ -57,6 +58,24 @@ def task_1_2():
 
 
 def task_1_3():
+    for hash_tag in HASH_TAGS[]:
+        print('*' * 25, hash_tag, '*' * 25)
+
+        file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
+        data_loader = DataLoader(file_path)
+        tweets_data = data_loader.get_split_data()
+
+        features = np.array(utils.extract_features(tweets_data, 1))
+        x = features[:-1, 1:6]
+        y = features[1:, 0]
+
+        model = sm.OLS(y, x)
+        fitted_model = model.fit()
+
+        print(fitted_model.summary())
+
+
+def task_1_4():
     pass
 
 
@@ -64,7 +83,8 @@ def task_1_3():
 task_functions = {
     "1.1" : task_1_1,
     "1.2" : task_1_2,
-    "1.3" : task_1_3
+    "1.3" : task_1_3,
+    "1.4" : task_1_4
 }
 
 

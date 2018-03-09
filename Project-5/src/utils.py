@@ -38,7 +38,7 @@ def plot_hist(data, title):
     plt.savefig("../figures/" + title + ".png", dpi=720)
 
 
-def extract_features(dataset):
+def extract_features_0(dataset):
     features = []
 
     for tweets_set in dataset:
@@ -55,3 +55,31 @@ def extract_features(dataset):
         features.append([n_tweets, n_retweets, n_followers, max_followers, day_time])
 
     return features
+
+
+def extract_features_1(dataset):
+    features = []
+
+    for tweets_set in dataset:
+        n_tweets = len(tweets_set)
+
+        feature = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        for tweet in tweets_set:
+            feature[0] += tweet["favorite_count"]
+            feature[1] += tweet["friends_count"]
+            feature[2] += tweet["ranking_score"]
+            feature[3] += tweet["influential"]
+            feature[4] += tweet["impression"]
+
+        features.append([n_tweets] + feature)
+
+    return features
+
+
+def extract_features(dataset, type):
+    if type == 0:
+        return extract_features_0(dataset)
+    elif type == 1:
+        return extract_features_1(dataset)
+    

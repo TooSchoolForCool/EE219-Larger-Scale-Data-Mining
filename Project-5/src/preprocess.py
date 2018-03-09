@@ -25,8 +25,18 @@ def pre_parse(hash_tag):
             target_info = {
                 "date" : tweet["citation_date"],
                 "n_retweets" : tweet["metrics"]["citations"]["total"],
-                "n_followers" : tweet["author"]["followers"]
+                "n_followers" : tweet["author"]["followers"],
+                "favorite_count" : tweet["tweet"]["favorite_count"],
+                "friends_count" : tweet["tweet"]["user"]["friends_count"],
+                "ranking_score" : tweet["metrics"]["ranking_score"],
+                "influential" : tweet["metrics"]["citations"]["influential"],
+                "impression" : tweet["metrics"]["impressions"]
             }
+
+            try:
+                target_info["influence_level"] = tweet["original_author"]["influence_level"]
+            except:
+                target_info["influence_level"] = 0.0
 
             tweets_info.append(target_info)
 
