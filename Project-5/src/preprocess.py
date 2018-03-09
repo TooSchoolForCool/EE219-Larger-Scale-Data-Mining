@@ -1,5 +1,6 @@
 import json
 
+
 TWEET_DATA_PREFIX = "../tweet_data/"
 HASH_TAGS = [
     "gohawks",
@@ -23,7 +24,7 @@ def pre_parse(hash_tag):
 
             target_info = {
                 "date" : tweet["citation_date"],
-                "n_reweets" : tweet["metrics"]["citations"]["total"],
+                "n_retweets" : tweet["metrics"]["citations"]["total"],
                 "n_followers" : tweet["author"]["followers"]
             }
 
@@ -36,6 +37,7 @@ def pre_parse(hash_tag):
 def main():
     for hash_tag in HASH_TAGS:
         pre_parse(hash_tag)
+        print("finish parsing %s" % hash_tag)
 
 
 if __name__ == '__main__':
