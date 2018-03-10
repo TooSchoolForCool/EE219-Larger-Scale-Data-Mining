@@ -58,8 +58,10 @@ class DataLoader(object):
 
         return start_time, end_time
 
+
 def main():
     DataLoader("gohawks")
+
 
 if __name__ == '__main__':
     main()

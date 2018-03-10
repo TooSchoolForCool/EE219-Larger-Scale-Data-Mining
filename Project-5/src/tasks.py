@@ -16,6 +16,21 @@ HASH_TAGS = [
     "superbowl"
 ]
 
+TEST_DATA_PREFIX = "../test_data/"
+
+TEST_FILES = [
+    "sample1_period1.txt",
+    "sample2_period2.txt",
+    "sample3_period3.txt",
+    "sample4_period1.txt",
+    "sample5_period1.txt",
+    "sample6_period2.txt",
+    "sample7_period3.txt",
+    "sample8_period1.txt",
+    "sample9_period2.txt",
+    "sample10_period3.txt"
+]
+
 
 def task_1_1():
     print("hash tag\taverage tweets\taverage followers\taverage retweets")
@@ -58,6 +73,14 @@ def task_1_2():
 
 
 def task_1_3():
+    feature_name = [
+        "favorite_count",
+        "friends_count",
+        "ranking_score",
+        "influential",
+        "impression"
+    ]
+
     for hash_tag in HASH_TAGS:
         print('*' * 25, hash_tag, '*' * 25)
 
@@ -72,7 +95,12 @@ def task_1_3():
         model = sm.OLS(y, x)
         fitted_model = model.fit()
 
+        for i in range(5):
+            utils.plot_scatter(x[:, i], y, feature_name[i], hash_tag)
+
         print(fitted_model.summary())
+
+
 
 
 def task_1_4():
@@ -146,12 +174,61 @@ def task_1_4():
         print("[%s] (%s) average error: %.3lf" % ("COMBINED", msg, total_error / 10))
 
 
+def task_1_5():
+    total_split_x = [[], [], []]
+    total_split_y = [[], [], []]
+    fitted_models = []
+    info = [
+        "Before Feb. 1, 8:00 a.m.", 
+        "Between Feb. 1, 8:00 a.m. and 8:00 p.m.",
+        "After Feb. 1, 8:00 p.m."
+    ]
+
+    #load training dataset
+    # for hash_tag in HASH_TAGS:
+    #     file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
+    #     data_loader = DataLoader(file_path)
+    #     tweets_data = data_loader.get_split_data()
+
+    #     features = np.array(utils.extract_features(tweets_data, 1))
+
+    #     split_x = [features[:439, 1:6], features[440:451, 1:6], features[452:-1, 1:6]]
+    #     split_y = [features[1:440, 0], features[441:452, 0], features[453:, 0]]
+        
+    #     for i in range(3):
+    #         total_split_x[i] += list(split_x[i])
+    #         total_split_y[i] += list(split_y[i])
+
+    # # convert training set to np.ndarray
+    # total_split_x = [np.array(x) for x in total_split_x]
+    # total_split_y = [np.array(y) for y in total_split_y]
+
+    # # train model
+    # for x, y, msg in zip(total_split_x, total_split_y, info):
+    #     total_error = 0.0
+
+    #     model = sm.OLS(y, x)
+    #     fitted_model = model.fit()
+    #     fitted_models.append(fitted_model)
+
+    for test_file in TEST_FILES:
+        file_path = TEST_DATA_PREFIX + "parsed-" + test_file
+        data_loader = DataLoader(file_path)
+        tweets_data = data_loader.get_split_data()
+
+        features = np.array(utils.extract_features(tweets_data, 1))
+
+        # print(features.shape)
+        print(data_loader.get_timegap())
+        print(len(tweets_data))
+
 # a list of function
 task_functions = {
     "1.1" : task_1_1,
     "1.2" : task_1_2,
     "1.3" : task_1_3,
-    "1.4" : task_1_4
+    "1.4" : task_1_4,
+    "1.5" : task_1_5
 }
 
 

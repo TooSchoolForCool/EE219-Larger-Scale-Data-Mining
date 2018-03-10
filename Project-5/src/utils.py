@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import normalize
 import math
+import numpy as np
 
 def calc_sum(dataset, key):
     """calculate totle number of a specific attribute
@@ -64,7 +66,7 @@ def extract_features_1(dataset):
     for tweets_set in dataset:
         n_tweets = len(tweets_set)
 
-        feature = [0, 0, 0, 0, 0, 0, 0, 0]
+        feature = [0, 0, 0, 0, 0]
 
         for tweet in tweets_set:
             feature[0] += tweet["favorite_count"]
@@ -83,6 +85,8 @@ def calc_error(test_y, predicted_y):
     for t, p in zip(test_y, predicted_y):
         error += abs(t - p)
 
+    error /= len(test_y)
+
     return error
 
 def extract_features(dataset, type):
@@ -91,3 +95,11 @@ def extract_features(dataset, type):
     elif type == 1:
         return extract_features_1(dataset)
     
+
+def plot_scatter(x, y, x_name, title):
+    # y = normalize(y[:, np.newaxis], axis=0).ravel()
+    plt.scatter(x, y, c="b", s=3)
+    plt.xlabel(x_name)
+    plt.ylabel("Number of Tweets")
+    plt.title(x_name + " vs. Number of Tweets")
+    plt.savefig("../figures/" + title + "-" + x_name + ".png", dpi=720)
