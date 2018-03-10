@@ -1,5 +1,8 @@
 import numpy as np
 from sklearn.model_selection import KFold
+from sklearn import svm
+from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 
 import utils
@@ -131,47 +134,86 @@ def task_1_4():
 
         ave_error = []
         for x, y, msg in zip(split_x, split_y, info):
-            total_error = 0.0
+            total_error = [0.0, 0.0, 0.0]
 
             for train_idx, test_idx in kf.split(x):
                 train_x, test_x = x[train_idx], x[test_idx]
                 train_y, test_y = y[train_idx], y[test_idx]
 
+                # OLS
                 model = sm.OLS(train_y, train_x)
                 fitted_model = model.fit()
                 predicted_y = fitted_model.predict(test_x)
 
                 error = utils.calc_error(test_y, predicted_y)
-                total_error += error
+                total_error[0] += error / 10
 
-            ave_error.append(total_error / 10)
-            print("[%s] (%s) average error: %.3lf" % (hash_tag, msg, total_error / 10))
+                # SVMtrain_y
+                lr = LinearRegression()
+                lr.fit(train_x, train_y)
+                predicted_y = lr.predict(test_x)
+
+                error = utils.calc_error(test_y, predicted_y)
+                total_error[1] += error / 10
+
+                # Neural Network
+                mlnn = MLPRegressor(activation="tanh")
+                mlnn.fit(train_x, train_y)
+                predicted_y = mlnn.predict(test_x)
+
+                error = utils.calc_error(test_y, predicted_y)
+                total_error[2] += error /10
+
+            ave_error.append(total_error)
 
         total_ave_errors.append(ave_error)
 
-    print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
-    for hash_tag, ave in zip(HASH_TAGS, total_ave_errors):
-        print("%s\t%.3lf\t%.3lf\t%.3lf" % (hash_tag, ave[0], ave[1], ave[2]))
+    for i, model in enumerate(["OLS", "SVM", "Neural Network"]):
+        print("*" * 25, model, "*" * 25)
+        print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
+        for hash_tag, ave in zip(HASH_TAGS, total_ave_errors):
+            print("%s\t%.3lf\t%.3lf\t%.3lf" % (hash_tag, ave[0][i], ave[1][i], ave[2][i]))
 
     total_split_x = [np.array(x) for x in total_split_x]
     total_split_y = [np.array(y) for y in total_split_y]
 
+    ave_error = []
     for x, y, msg in zip(total_split_x, total_split_y, info):
-        total_error = 0.0
-
+        total_error = [0.0, 0.0, 0.0]
         for train_idx, test_idx in kf.split(x):
             train_x, test_x = x[train_idx], x[test_idx]
             train_y, test_y = y[train_idx], y[test_idx]
 
+            # OLS
             model = sm.OLS(train_y, train_x)
             fitted_model = model.fit()
             predicted_y = fitted_model.predict(test_x)
 
             error = utils.calc_error(test_y, predicted_y)
-            total_error += error
+            total_error[0] += error / 10
 
-        ave_error.append(total_error / 10)
-        print("[%s] (%s) average error: %.3lf" % ("COMBINED", msg, total_error / 10))
+            # SVMtrain_y
+            lr = LinearRegression()
+            lr.fit(train_x, train_y)
+            predicted_y = lr.predict(test_x)
+
+            error = utils.calc_error(test_y, predicted_y)
+            total_error[1] += error / 10
+
+            # Neural Network
+            mlnn = MLPRegressor(activation="tanh")
+            mlnn.fit(train_x, train_y)
+            predicted_y = mlnn.predict(test_x)
+
+            error = utils.calc_error(test_y, predicted_y)
+            total_error[2] += error / 10
+
+        ave_error.append(total_error)
+
+    for i, model in enumerate(["OLS", "SVM", "Neural Network"]):
+        print("*" * 25, model, "*" * 25)
+        print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
+        print("%s\t%.3lf\t%.3lf\t%.3lf" % ("COMBINED", ave_error[0][i], ave_error[1][i], ave_error[2][i]))
 
 
 def task_1_5():
@@ -184,32 +226,30 @@ def task_1_5():
         "After Feb. 1, 8:00 p.m."
     ]
 
-    #load training dataset
-    # for hash_tag in HASH_TAGS:
-    #     file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
-    #     data_loader = DataLoader(file_path)
-    #     tweets_data = data_loader.get_split_data()
+    # load training dataset
+    for hash_tag in HASH_TAGS:
+        file_path = TWEET_DATA_PREFIX + hash_tag + ".txt"
+        data_loader = DataLoader(file_path)
+        tweets_data = data_loader.get_split_data()
 
-    #     features = np.array(utils.extract_features(tweets_data, 1))
+        features = np.array(utils.extract_features(tweets_data, 1))
 
-    #     split_x = [features[:439, 1:6], features[440:451, 1:6], features[452:-1, 1:6]]
-    #     split_y = [features[1:440, 0], features[441:452, 0], features[453:, 0]]
+        split_x = [features[:439, 1:6], features[440:451, 1:6], features[452:-1, 1:6]]
+        split_y = [features[1:440, 0], features[441:452, 0], features[453:, 0]]
         
-    #     for i in range(3):
-    #         total_split_x[i] += list(split_x[i])
-    #         total_split_y[i] += list(split_y[i])
+        for i in range(3):
+            total_split_x[i] += list(split_x[i])
+            total_split_y[i] += list(split_y[i])
 
-    # # convert training set to np.ndarray
-    # total_split_x = [np.array(x) for x in total_split_x]
-    # total_split_y = [np.array(y) for y in total_split_y]
+    # convert training set to np.ndarray
+    total_split_x = [np.array(x) for x in total_split_x]
+    total_split_y = [np.array(y) for y in total_split_y]
 
-    # # train model
-    # for x, y, msg in zip(total_split_x, total_split_y, info):
-    #     total_error = 0.0
-
-    #     model = sm.OLS(y, x)
-    #     fitted_model = model.fit()
-    #     fitted_models.append(fitted_model)
+    # train model
+    for x, y, msg in zip(total_split_x, total_split_y, info):
+        model = sm.OLS(y, x)
+        fitted_model = model.fit()
+        fitted_models.append(fitted_model)
 
     for test_file in TEST_FILES:
         file_path = TEST_DATA_PREFIX + "parsed-" + test_file
@@ -218,9 +258,19 @@ def task_1_5():
 
         features = np.array(utils.extract_features(tweets_data, 1))
 
-        # print(features.shape)
-        print(data_loader.get_timegap())
-        print(len(tweets_data))
+        train_x = features[:, 1:6]
+
+        if "period1" in test_file:
+            predicted_y = fitted_models[0].predict(train_x)
+        elif "period2" in test_file:
+            predicted_y = fitted_models[1].predict(train_x)
+        elif "period3" in test_file:
+            predicted_y = fitted_models[2].predict(train_x)
+
+        print(test_file, predicted_y[-1])
+
+
+
 
 # a list of function
 task_functions = {
