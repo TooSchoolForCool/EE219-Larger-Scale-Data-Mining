@@ -25,6 +25,29 @@ def stemming_tokenizer(text):
 
 
 #######################################################################
+# Calculate TFxIDF
+#
+# docs is list of documents (non-tokenized)
+#######################################################################
+def calcTFxIDF(docs, min_df=2, enable_stopword=True, enable_stem=True, enable_log=False):    
+    # stopwords and tokenizer config
+    stop_words = text.ENGLISH_STOP_WORDS if enable_stopword else None
+    # get documents tokens
+    tokenizer = stemming_tokenizer if enable_stem else None
+    
+    vectorizer = CountVectorizer(analyzer='word', min_df=min_df, tokenizer=tokenizer, stop_words=stop_words)
+    # vectorizer = tkn.MyTokenizer(min_df=min_df)
+    
+    tfidf_transformer = TfidfTransformer()
+
+    # calculate TFxIDF
+    docs_tkn =  vectorizer.fit_transform(docs)
+    docs_TFxIDF = tfidf_transformer.fit_transform(docs_tkn)
+
+    return docs_TFxIDF, vectorizer.get_feature_names()
+
+
+#######################################################################
 # Feature Extraction Pipeline
 #######################################################################
 def pipeline(train_x, test_x, feature='tfidf', reduction='lsi', k=50, min_df=2,

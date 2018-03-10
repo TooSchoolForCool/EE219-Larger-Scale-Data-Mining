@@ -62,6 +62,7 @@ def task_1_1():
 
 
 def task_1_2():
+    errors = []
     for hash_tag in HASH_TAGS:
         print('*' * 25, hash_tag, '*' * 25)
 
@@ -78,6 +79,13 @@ def task_1_2():
 
         print(fitted_model.summary())
 
+        predicted_y = fitted_model.predict(x)
+        error = utils.calc_error(y, predicted_y)
+        errors.append(error)
+
+    print("Mean Errors\t%.3lf\t%.3lf\t%.3lf\t%.3lf\t%.3lf\t%.3lf" % 
+        (errors[0], errors[1], errors[2], errors[3], errors[4], errors[5]))
+
 
 def task_1_3():
     feature_name = [
@@ -87,7 +95,7 @@ def task_1_3():
         "influential",
         "impression"
     ]
-
+    errors = []
     for hash_tag in HASH_TAGS:
         print('*' * 25, hash_tag, '*' * 25)
 
@@ -106,6 +114,13 @@ def task_1_3():
             utils.plot_scatter(x[:, i], y, feature_name[i], hash_tag)
 
         print(fitted_model.summary())
+
+        predicted_y = fitted_model.predict(x)
+        error = utils.calc_error(y, predicted_y)
+        errors.append(error)
+
+    print("Mean Errors\t%.3lf\t%.3lf\t%.3lf\t%.3lf\t%.3lf\t%.3lf" % 
+        (errors[0], errors[1], errors[2], errors[3], errors[4], errors[5]))
 
 
 
@@ -323,6 +338,35 @@ def task_2():
     utils.analysis_report(test_y, predicted_y, "LogisticRegression")
 
 
+def task_3():
+    src_path = TWEET_DATA_PREFIX + "tweets_#superbowl.txt"
+    contents = utils.load_tweets_content(src_path)
+
+    tficf, word_list = feature.calcTFxIDF(contents, min_df=2, enable_stopword=True, 
+        enable_stem=True, enable_log=False)
+
+    top_10_words = [[] for _ in range(3)]
+
+    # print top-10 words from each target category
+    for i in range(3):
+        for _ in range(0, 10):
+            top_freq_idx = np.argmax(tficf[i])
+            # remove current most frequent word
+            tficf[i, top_freq_idx] = 0.0
+            # append current most frequent word in to list
+            top_10_words[i].append( word_list[top_freq_idx] )  
+
+    print('%s\t%s\t%s' % ("Before", "During", "After"))
+    for i in range(0, 10):
+        print('%s\t%s\t%s' % (
+            top_10_words[0][i],
+            top_10_words[1][i],
+            top_10_words[2][i],
+        ))
+
+
+
+
 # a list of function
 task_functions = {
     "1.1" : task_1_1,
@@ -330,7 +374,8 @@ task_functions = {
     "1.3" : task_1_3,
     "1.4" : task_1_4,
     "1.5" : task_1_5,
-    "2" : task_2
+    "2" : task_2,
+    "3" : task_3
 }
 
 

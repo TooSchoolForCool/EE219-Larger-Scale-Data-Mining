@@ -8,6 +8,10 @@ from sklearn.metrics import confusion_matrix
 import math
 import numpy as np
 import re
+import json
+import datetime
+import time
+import pytz
 
 def calc_sum(dataset, key):
     """calculate totle number of a specific attribute
@@ -189,3 +193,28 @@ def match(loc):
     if (re.match('.*MA.*', loc) or re.match('.*Mass.*', loc)):
         return 1
     return -1
+
+def load_tweets_content(src_path):
+    pst_tz = pytz.timezone("US/Pacific")
+
+    start = datetime.datetime(2015, 2, 1, 8, tzinfo=pst_tz)
+    end = datetime.datetime(2015, 2, 1, 20, tzinfo=pst_tz)
+
+    contents = ["" for i in range(3)]
+
+    with open (src_path) as src_file:
+        for line in src_file:
+            tweet = json.loads(line)
+
+            content = tweet["title"]
+            date = tweet["citation_date"]
+            date = datetime.datetime.fromtimestamp(date, pst_tz)
+
+            if date < start:
+                contents[0] += content
+            elif date > end:
+                contents[2] += content
+            else:
+                contents[1] += content
+
+    return contents
