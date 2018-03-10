@@ -1,14 +1,19 @@
-from sklearn.linear_model import LogisticRegression as LG
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.naive_bayes import GaussianNB
 
-class LogisticRegression(object):
+#######################################################################
+# Multinomial Naive Bayes Classifier
+#######################################################################
+class NaiveBayes(object):
     #######################################################################
     # Constructor
     #
     # model_type:
     #   binary -> 2-class classification
     #######################################################################
-    def __init__(self, penalty = 1.0, regularization = 'l1'):
-        self.logreg_ = LG(C=penalty, penalty=regularization)
+    def __init__(self, model_type='binary'):
+        self.nb_ = MultinomialNB()
 
     #######################################################################
     # Model Training function
@@ -21,7 +26,7 @@ class LogisticRegression(object):
     #       [y1, y2, ..., yn]
     #######################################################################
     def train(self, x, y):
-        self.logreg_.fit(x, y)
+        self.nb_.fit(x, y)
 
 
     #######################################################################
@@ -37,7 +42,7 @@ class LogisticRegression(object):
     #       [y1, y2, y3, ..., yn]
     #######################################################################
     def predict(self, x):
-        predicted_y = self.logreg_.predict(x)
+        predicted_y = self.nb_.predict(x)
 
         return predicted_y
 
@@ -53,15 +58,12 @@ class LogisticRegression(object):
     #   Distance of the samples X to the separating hyperplane.
     #######################################################################
     def predictScore(self, x):
-        # predicted_prob = self.logreg_.predict_proba(x)
+        predicted_prob = self.nb_.predict_proba(x)
 
-        # return predicted_prob[:, 1]
-        return self.logreg_.decision_function(x)
-
+        return predicted_prob[:, 1]
 
 def main():
     pass
-
 
 if __name__ == '__main__':
     main()

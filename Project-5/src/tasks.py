@@ -1,12 +1,16 @@
 import numpy as np
 from sklearn.model_selection import KFold
-from sklearn import svm
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
+import json
 
 import utils
+import feature
 from data_loader import DataLoader
+from svm import SVM
+from naiveBayes import NaiveBayes
+from regression import LogisticRegression
 
 
 TWEET_DATA_PREFIX = "../tweet_data/"
@@ -192,7 +196,7 @@ def task_1_4():
             error = utils.calc_error(test_y, predicted_y)
             total_error[0] += error / 10
 
-            # SVMtrain_y
+            # Linear Regression
             lr = LinearRegression()
             lr.fit(train_x, train_y)
             predicted_y = lr.predict(test_x)
@@ -210,7 +214,7 @@ def task_1_4():
 
         ave_error.append(total_error)
 
-    for i, model in enumerate(["OLS", "SVM", "Neural Network"]):
+    for i, model in enumerate(["OLS", "Linear Regression", "Neural Network"]):
         print("*" * 25, model, "*" * 25)
         print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
         print("%s\t%.3lf\t%.3lf\t%.3lf" % ("COMBINED", ave_error[0][i], ave_error[1][i], ave_error[2][i]))
@@ -256,20 +260,67 @@ def task_1_5():
         data_loader = DataLoader(file_path)
         tweets_data = data_loader.get_split_data()
 
-        features = np.array(utils.extract_features(tweets_data, 1))
+        features = np.array(utils.extract_features(tweets_data, 2))
 
-        train_x = features[:, 1:6]
+        train_x = features[:-1, 1:6]
 
         if "period1" in test_file:
-            predicted_y = fitted_models[0].predict(train_x)
+            predicted_y = fitted_models[0].predict(train_x[-1, :])
         elif "period2" in test_file:
-            predicted_y = fitted_models[1].predict(train_x)
+            predicted_y = fitted_models[1].predict(train_x[-1, :])
         elif "period3" in test_file:
-            predicted_y = fitted_models[2].predict(train_x)
+            predicted_y = fitted_models[2].predict(train_x[-1, :])
 
-        print(test_file, predicted_y[-1])
+        print("%s\t%lf" % (test_file, predicted_y))
 
 
+def task_2():
+    src_path = TWEET_DATA_PREFIX + "prob2_superbowl.txt"
+
+    kf = KFold(n_splits=10)
+
+    with open(src_path) as src:
+        json_obj = json.load(src)
+        contents = json_obj["contents"]
+        labels = json_obj["labels"]
+
+    contents = np.array(contents)
+    labels = np.array(labels)
+
+    features, _ = feature.pipeline(
+        contents, contents, feature='tfidf', reduction='nmf',
+        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True, 
+        enable_minmax_scale=False
+    )
+
+    for train_idx, test_idx in kf.split(contents):
+        train_x, train_y = features[train_idx], labels[train_idx]
+        test_x, test_y = features[test_idx], labels[test_idx]
+        break
+
+    svm_model = SVM(model_type="binary")
+    svm_model.train(train_x, train_y)
+    predicted_y = svm_model.predict(test_x)
+
+    decision_func = svm_model.predictScore(test_x)
+    utils.printROC(test_y, decision_func, "SVM")
+    utils.analysis_report(test_y, predicted_y, "SVM")
+
+    bayes = NaiveBayes(model_type="binary")
+    bayes.train(train_x, train_y)
+    predicted_y = bayes.predict(test_x)
+
+    decision_func = bayes.predictScore(test_x)
+    utils.printROC(test_y, decision_func, "NaiveBayes")
+    utils.analysis_report(test_y, predicted_y, "NaiveBayes")
+
+    lgr = LogisticRegression()
+    lgr.train(train_x, train_y)
+    predicted_y = lgr.predict(test_x)
+
+    decision_func = lgr.predictScore(test_x)
+    utils.printROC(test_y, decision_func, "LogisticRegression")
+    utils.analysis_report(test_y, predicted_y, "LogisticRegression")
 
 
 # a list of function
@@ -278,7 +329,8 @@ task_functions = {
     "1.2" : task_1_2,
     "1.3" : task_1_3,
     "1.4" : task_1_4,
-    "1.5" : task_1_5
+    "1.5" : task_1_5,
+    "2" : task_2
 }
 
 

@@ -1,4 +1,5 @@
 import json
+import utils
 
 
 TWEET_DATA_PREFIX = "../tweet_data/"
@@ -89,15 +90,38 @@ def pre_parse_test(file_name):
     with open(dst_path, "w") as dst_file:
         json.dump(tweets_info, dst_file)
 
+def task_2_preprocess():
+    src_path = TWEET_DATA_PREFIX + "tweets_#superbowl.txt"
+    dst_path = TWEET_DATA_PREFIX + "prob2_superbowl.txt"
+
+    contents = []
+    labels = []
+
+    with open(src_path) as src:
+        for line in src:
+            tweet = json.loads(line)
+
+            location = utils.match(tweet["tweet"]["user"]["location"])
+            if location in [0, 1]:
+                contents.append(tweet["title"])
+                labels.append(location)
+
+    json_obj = {"contents" : contents, "labels" : labels}
+
+    with open(dst_path, "w") as dst_file:
+        json.dump(json_obj, dst_file)
 
 def main():
-    # for hash_tag in HASH_TAGS:
-    #     pre_parse_train(hash_tag)
-    #     print("finish parsing %s" % hash_tag)
+    for hash_tag in HASH_TAGS:
+        pre_parse_train(hash_tag)
+        print("finish parsing %s" % hash_tag)
 
     for file_name in TEST_FILES:
         pre_parse_test(file_name)
         print("finish parsing %s" % file_name)
+
+    task_2_preprocess()
+
 
 
 if __name__ == '__main__':

@@ -90,29 +90,6 @@ def analysis_report(test_y, predicted_y, targets):
         prec_list.append(precision)
         recall_list.append(recall)
 
-    # find best gapping space
-    gap = 10
-    for t in targets:
-        gap = max(gap, len(t) + 5)
-
-    # print metrics title
-    fomatter = '%-' + str(gap) + 's%-15.4lf%-15.4lf%-15.4lf'
-    print("%s%-15s%-15s%-15s" % (' ' * gap, 'Precision', 'Recall', 'Accuracy'))
-    # print metricx for each category
-    for i in range(0, len(targets)):
-        print(fomatter % (targets[i], prec_list[i], recall_list[i], acc_list[i]))
-    # print average
-    print(fomatter % ('Average', (total_recall / len(targets)), 
-        (total_precision / len(targets)), (total_acc / len(targets))))
-    print('-' * 60)
-
-    # print confusion matrix title
-    fomatter = '%-' + str(gap) + 's\t%d\t%d\t%d\t%d'
-    print("%s\t%s\t%s\t%s\t%s" % (' ' * gap, 'TP', 'FP', 'FN', 'TN'))
-    for i in range(0, len(targets)):
-        print(fomatter % (targets[i], TP_list[i], FP_list[i], FN_list[i], TN_list[i]))
-    print('-' * 60)
-
 
 def main():
     pass

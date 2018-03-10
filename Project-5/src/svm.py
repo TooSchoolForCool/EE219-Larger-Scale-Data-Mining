@@ -1,14 +1,31 @@
-from sklearn.linear_model import LogisticRegression as LG
+from sklearn import svm
+import numpy as np
 
-class LogisticRegression(object):
+
+class SVM(object):
     #######################################################################
     # Constructor
     #
-    # model_type:
-    #   binary -> 2-class classification
+    # Input:
+    #   model_type:
+    #       binary - 2-class classification
+    #       multi - multi-class classification
+    #   kernel:
+    #       'linear' - linear kernel
+    #       'rbf' - guassian kernel
+    #   penalty:
+    #       The greater the penalty, the more weight on slack variable
     #######################################################################
-    def __init__(self, penalty = 1.0, regularization = 'l1'):
-        self.logreg_ = LG(C=penalty, penalty=regularization)
+    def __init__(self, model_type = 'binary', penalty = 1.0):
+        # model_type = 'ovr' if model_type == 'binary' else 'ovo'
+        if model_type == 'binary':
+            self.svm_model_ = svm.LinearSVC(C=penalty)
+        elif model_type == 'multy1':
+            self.svm_model_ = svm.SVC(decision_function_shape='ovo')
+        elif model_type == 'multy2':
+            self.svm_model_ = svm.NuSVC(decision_function_shape='ovr')
+           
+        # self.svm_model_ = svm.SVC(kernel='rbf', C=penalty)
 
     #######################################################################
     # Model Training function
@@ -21,7 +38,12 @@ class LogisticRegression(object):
     #       [y1, y2, ..., yn]
     #######################################################################
     def train(self, x, y):
-        self.logreg_.fit(x, y)
+        # deep copy
+        # train_x = x[:]
+        # train_y = y[:]
+
+        # training
+        self.svm_model_.fit(x, y)
 
 
     #######################################################################
@@ -37,7 +59,10 @@ class LogisticRegression(object):
     #       [y1, y2, y3, ..., yn]
     #######################################################################
     def predict(self, x):
-        predicted_y = self.logreg_.predict(x)
+        # deep copy
+        # test_x = x[:]
+
+        predicted_y = self.svm_model_.predict(x)
 
         return predicted_y
 
@@ -47,16 +72,13 @@ class LogisticRegression(object):
     # Input:
     #   x:  
     #       feature vector data set
-    #       type: Pandas DataFrame (n * p dimension)
+    #       [[x, ..., x], [x, ..., x], ..., [x, ..., x]]
     #
     # Output:
     #   Distance of the samples X to the separating hyperplane.
     #######################################################################
     def predictScore(self, x):
-        # predicted_prob = self.logreg_.predict_proba(x)
-
-        # return predicted_prob[:, 1]
-        return self.logreg_.decision_function(x)
+        return self.svm_model_.decision_function(x)
 
 
 def main():
