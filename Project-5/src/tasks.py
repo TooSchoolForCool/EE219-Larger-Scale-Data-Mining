@@ -339,11 +339,15 @@ def task_2():
 
 
 def task_3():
-    src_path = TWEET_DATA_PREFIX + "tweets_#superbowl.txt"
+    src_path = TWEET_DATA_PREFIX + "tweets_#nfl.txt"
     contents = utils.load_tweets_content(src_path)
+
+    print("Load Content is done")
 
     tficf, word_list = feature.calcTFxIDF(contents, min_df=2, enable_stopword=True, 
         enable_stem=True, enable_log=False)
+
+    print("feature extraction done")
 
     top_10_words = [[] for _ in range(3)]
 
