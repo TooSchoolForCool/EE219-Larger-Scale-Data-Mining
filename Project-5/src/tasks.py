@@ -428,6 +428,70 @@ def task_3_1():
 
 
 def task_3_2():
+    src_path = TWEET_DATA_PREFIX + "tweets_#gohawks.txt"
+    gohawks_contents = utils.load_user_tweets(src_path)
+    gohawks_labels = [1 for _ in range(len(gohawks_contents))]
+
+    src_path = TWEET_DATA_PREFIX + "tweets_#gopatriots.txt"
+    gopatriots_contents = utils.load_user_tweets(src_path)
+    gopatriots_labels = [0 for _ in range(len(gopatriots_contents))]
+
+    N_SAMPLES = 3000
+    contents = gohawks_contents[:N_SAMPLES] + gopatriots_contents[:N_SAMPLES]
+    labels = gohawks_labels[:N_SAMPLES] + gopatriots_labels[:N_SAMPLES]
+
+    new_contents = []
+    for s in contents:
+        s = s.replace('gohawks', '')
+        s = s.replace('gopatriots', '')
+        new_contents.append(s)
+
+    contents = np.array(new_contents)
+    labels = np.array(labels)
+
+    shuffle_idx = np.arange(N_SAMPLES * 2)
+    np.random.shuffle( shuffle_idx )
+    contents = contents[shuffle_idx]
+    labels = labels[shuffle_idx]
+
+
+
+    kf = KFold(n_splits=5)
+
+    for train_idx, test_idx in kf.split(contents):
+        train_x, train_y = contents[train_idx], labels[train_idx]
+        test_x, test_y = contents[test_idx], labels[test_idx]
+        break
+
+    train_features, test_features = feature.pipeline(
+        train_x, test_x, feature='tfidf', reduction='nmf',
+        k=50, min_df=2, enable_stopword = True, enable_stem = True, enable_log=True, 
+        enable_minmax_scale=False
+    )
+
+    svm_model = SVM(model_type="binary")
+    svm_model.train(train_features, train_y)
+    predicted_y = svm_model.predict(test_features)
+
+    decision_func = svm_model.predictScore(test_features)
+    utils.printROC(test_y, decision_func, "Task3.2-SVM")
+    utils.analysis_report(test_y, predicted_y, "Task3.2-SVM")
+
+    bayes = NaiveBayes(model_type="binary")
+    bayes.train(train_features, train_y)
+    predicted_y = bayes.predict(test_features)
+
+    decision_func = bayes.predictScore(test_features)
+    utils.printROC(test_y, decision_func, "Task3.2-NaiveBayes")
+    utils.analysis_report(test_y, predicted_y, "Task3.2-NaiveBayes")
+
+    lgr = LogisticRegression()
+    lgr.train(train_features, train_y)
+    predicted_y = lgr.predict(test_features)
+
+    decision_func = lgr.predictScore(test_features)
+    utils.printROC(test_y, decision_func, "Task3.2-LogisticRegression")
+    utils.analysis_report(test_y, predicted_y, "Task3.2-LogisticRegression")
 
 
 

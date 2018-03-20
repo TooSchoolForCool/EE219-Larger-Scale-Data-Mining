@@ -223,3 +223,16 @@ def load_tweets_content(src_path):
             # idx += 1
 
     return contents
+
+
+def load_user_tweets(src_path):
+    contents = []
+
+    with open (src_path) as src_file:
+        # idx = 0
+        for line in src_file:
+            tweet = json.loads(line)
+            content = tweet["title"]
+            contents.append(content)
+
+    return contents
