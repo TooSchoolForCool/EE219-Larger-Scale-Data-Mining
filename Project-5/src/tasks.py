@@ -338,16 +338,74 @@ def task_2():
     utils.analysis_report(test_y, predicted_y, "LogisticRegression")
 
 
-def task_3():
-    src_path = TWEET_DATA_PREFIX + "tweets_#nfl.txt"
+def task_3_1():
+    src_path = TWEET_DATA_PREFIX + "tweets_#gohawks.txt"
     contents = utils.load_tweets_content(src_path)
 
-    print("Load Content is done")
+    print("tweets_#gohawks: Load Content is done")
 
     tficf, word_list = feature.calcTFxIDF(contents, min_df=2, enable_stopword=True, 
         enable_stem=True, enable_log=False)
 
-    print("feature extraction done")
+    print("tweets_#gohawks: feature extraction done")
+
+    top_10_words = [[] for _ in range(3)]
+
+    # print top-10 words from each target category
+    for i in range(3):
+        for _ in range(0, 10):
+            top_freq_idx = np.argmax(tficf[i])
+            # remove current most frequent word
+            tficf[i, top_freq_idx] = 0.0
+            # append current most frequent word in to list
+            top_10_words[i].append( word_list[top_freq_idx] )  
+
+    print('%s\t%s\t%s' % ("Before", "During", "After"))
+    for i in range(0, 10):
+        print('%s\t%s\t%s' % (
+            top_10_words[0][i],
+            top_10_words[1][i],
+            top_10_words[2][i],
+        ))
+
+    src_path = TWEET_DATA_PREFIX + "tweets_#gopatriots.txt"
+    contents = utils.load_tweets_content(src_path)
+
+    print("tweets_#gopatriots: Load Content is done")
+
+    tficf, word_list = feature.calcTFxIDF(contents, min_df=2, enable_stopword=True, 
+        enable_stem=True, enable_log=False)
+
+    print("tweets_#gopatriots: feature extraction done")
+
+    top_10_words = [[] for _ in range(3)]
+
+    # print top-10 words from each target category
+    for i in range(3):
+        for _ in range(0, 10):
+            top_freq_idx = np.argmax(tficf[i])
+            # remove current most frequent word
+            tficf[i, top_freq_idx] = 0.0
+            # append current most frequent word in to list
+            top_10_words[i].append( word_list[top_freq_idx] )  
+
+    print('%s\t%s\t%s' % ("Before", "During", "After"))
+    for i in range(0, 10):
+        print('%s\t%s\t%s' % (
+            top_10_words[0][i],
+            top_10_words[1][i],
+            top_10_words[2][i],
+        ))
+
+    src_path = TWEET_DATA_PREFIX + "tweets_#nfl.txt"
+    contents = utils.load_tweets_content(src_path)
+
+    print("tweets_#nfl: Load Content is done")
+
+    tficf, word_list = feature.calcTFxIDF(contents, min_df=2, enable_stopword=True, 
+        enable_stem=True, enable_log=False)
+
+    print("tweets_#nfl: feature extraction done")
 
     top_10_words = [[] for _ in range(3)]
 
@@ -369,6 +427,9 @@ def task_3():
         ))
 
 
+def task_3_2():
+
+
 
 
 # a list of function
@@ -379,7 +440,8 @@ task_functions = {
     "1.4" : task_1_4,
     "1.5" : task_1_5,
     "2" : task_2,
-    "3" : task_3
+    "3.1" : task_3_1,
+    "3.2" : task_3_2
 }
 
 

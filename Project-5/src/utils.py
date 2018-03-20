@@ -203,6 +203,7 @@ def load_tweets_content(src_path):
     contents = ["" for i in range(3)]
 
     with open (src_path) as src_file:
+        # idx = 0
         for line in src_file:
             tweet = json.loads(line)
 
@@ -216,5 +217,9 @@ def load_tweets_content(src_path):
                 contents[2] += content
             else:
                 contents[1] += content
+
+            # if idx % 10000 == 0:
+            #     print("load %d" % idx)
+            # idx += 1
 
     return contents
