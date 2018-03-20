@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.neural_network import MLPRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, SGDClassifier
 import statsmodels.api as sm
 import json
 
@@ -187,7 +187,7 @@ def task_1_4():
 
         total_ave_errors.append(ave_error)
 
-    for i, model in enumerate(["OLS", "SVM", "Neural Network"]):
+    for i, model in enumerate(["OLS", "SGD", "Neural Network"]):
         print("*" * 25, model, "*" * 25)
         print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
         for hash_tag, ave in zip(HASH_TAGS, total_ave_errors):
@@ -212,7 +212,7 @@ def task_1_4():
             total_error[0] += error / 10
 
             # Linear Regression
-            lr = LinearRegression()
+            lr = SGDClassifier()
             lr.fit(train_x, train_y)
             predicted_y = lr.predict(test_x)
 
@@ -229,7 +229,7 @@ def task_1_4():
 
         ave_error.append(total_error)
 
-    for i, model in enumerate(["OLS", "Linear Regression", "Neural Network"]):
+    for i, model in enumerate(["OLS", "SGD", "Neural Network"]):
         print("*" * 25, model, "*" * 25)
         print("\t%s\t%s\t%s" % (info[0], info[1], info[2]))
         print("%s\t%.3lf\t%.3lf\t%.3lf" % ("COMBINED", ave_error[0][i], ave_error[1][i], ave_error[2][i]))
