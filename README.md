@@ -17,4 +17,7 @@ Brief Project Description:
 
 - Project 1: Classification Analysis on Textual Data
 - Project 2: Clustering
+- Project 3: [Not Implement yet]
+- Project 4: [Not Implement yet]
+- Project 5: Popularity Prediction on Twitter
 
